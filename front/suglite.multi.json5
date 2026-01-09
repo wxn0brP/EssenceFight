@@ -1,0 +1,8 @@
+[
+    {
+        cmd: "sass style:dist",
+        watch: [
+            "style/style.scss"
+        ]
+    }
+]

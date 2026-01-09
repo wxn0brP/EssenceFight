@@ -1,0 +1,27 @@
+{
+	"name": "@wxn0brp/essence-fight",
+	"version": "0.0.1",
+	"main": "src/zhiva/index.ts",
+	"description": "",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/wxn0brP/EssenceFight.git"
+	},
+	"homepage": "https://github.com/wxn0brP/EssenceFight",
+	"author": "wxn0brP",
+	"license": "MIT",
+	"type": "module",
+	"scripts": {
+		"build": "cd front && bun run build && cd ..",
+		"start": "src src/zhiva/index.ts"
+	},
+	"devDependencies": {
+		"@types/bun": "*",
+		"typescript": "*"
+	},
+	"dependencies": {
+		"@wxn0brp/falcon-frame": "^0.5.9",
+		"@wxn0brp/gloves-link-server": "^0.0.13",
+		"@wxn0brp/zhiva-base-lib": "github:wxn0brP/Zhiva-base-lib"
+	}
+}
