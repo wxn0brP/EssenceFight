@@ -1,32 +1,38 @@
 import GlovesLinkClient from "@wxn0brp/gloves-link-client";
+import { fetchApiJson } from "@wxn0brp/zhiva-base-lib/front/api";
 import { GameState } from "_types/state";
 
-const urlParams = new URLSearchParams(window.location.search);
-let reload = false;
+function mockApi() {
+    const params = new URLSearchParams(window.location.search)
+    const token = params.get("token");
+    if (!token) {
+        const tk = prompt("Enter token");
+        location.search = `?token=${tk}`;
+    }
 
-if (!urlParams.get("id")) {
-    const id = prompt("Enter your id");
-    urlParams.set("id", id);
-    reload = true;
+    return {
+        err: false,
+        data: {
+            _id: token,
+            sessionToken: token
+        }
+    }
 }
 
-if (!urlParams.get("game")) {
-    const id = prompt("Enter game id");
-    urlParams.set("game", id);
-    reload = true;
+const tokenRes:
+    { err: true, msg: string } |
+    { err: false, data: { _id: string, sessionToken: string } }
+    = (localStorage.getItem("dev") === "true") ? mockApi() : await fetchApiJson("token");
+
+if (tokenRes.err === true) {
+    alert(tokenRes.msg);
+    throw new Error(tokenRes.msg);
 }
 
-if (reload) {
-    window.location.search = urlParams.toString();
-}
-
-document.title += " | " + urlParams.get("id");
+export const user = tokenRes.data;
 
 export const ws = new GlovesLinkClient("/", {
-    connectionData: {
-        _id: urlParams.get("id"),
-        game: urlParams.get("game"),
-    },
+    token: tokenRes.data.sessionToken,
     logs: true
 });
 

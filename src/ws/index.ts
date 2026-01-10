@@ -1,90 +1,94 @@
+import { User } from "#api/account";
+import { db } from "#db";
 import { Engine } from "#engine";
+import { matchSystem } from "#mmr";
+import { debounce } from "#utils";
+import { genId } from "@wxn0brp/db";
 import { GlovesLinkServer, GLSocket } from "@wxn0brp/gloves-link-server";
 import { AuthFnResult } from "@wxn0brp/gloves-link-server/types";
 
 export const wss = new GlovesLinkServer({});
 
 export interface EFSocket extends GLSocket {
-    user: {
-        _id: string;
-        game: string;
-    }
+    user: User;
+    gameId: string;
 }
 
 const games = new Map<string, Engine>();
 
-wss.of("/").auth(async ({ data }): Promise<AuthFnResult> => {
-    const { _id, game } = data;
-
-    if (!_id || !game) {
+wss.of("/").auth(async ({ token }): Promise<AuthFnResult> => {
+    if (!token) {
         return {
             status: 401,
             msg: "Unauthorized"
         }
     }
 
-    if (games.has(game)) {
-        const room = wss.room("game-" + game);
-        if (room.size === 2) {
-            return {
-                status: 401,
-                msg: "Game already started"
-            }
-        }
-        // if else = reconnect
-    }
-
-    const isUserTaken = wss.room("user-" + _id)?.clients?.size;
-    if (isUserTaken) {
+    const user = await db.findOne<User>("users", { sessionToken: token });
+    if (!user) {
         return {
             status: 401,
-            msg: "User taken"
+            msg: "Unauthorized"
         }
     }
 
     return {
         status: 200,
-        user: {
-            _id,
-            game
-        },
+        user,
     }
 });
 
-wss.of("/").onConnect((socket: EFSocket) => {
-    const { _id, game } = socket.user;
-    console.log("connected", _id, game);
+wss.of("/").onConnect(async (socket: EFSocket) => {
+    const { _id } = socket.user;
+    console.log("connected", _id);
 
     socket.joinRoom("user-" + _id);
 
-    const gameRoomId = "game-" + game;
-    socket.joinRoom(gameRoomId);
-    const gameRoom = wss.room(gameRoomId);
-
-    if (gameRoom.size === 2) {
-        if (!games.has(game)) {
-            const engine = new Engine([
-                _id,
-                gameRoom.sockets[0].user._id
-            ]);
-
-            games.set(game, engine);
-            gameRoom.emit("start", "new", engine.state);
-        } else {
-            const engine = games.get(game);
-            socket.emit("start", "rejoin", engine.state);
-        }
-    } else {
-        gameRoom.emit("wait");
-    }
+    socket.on("game.search", (cb?: Function) => {
+        if (matchSystem._players.has(_id)) return cb?.("You are already in a match");
+        matchSystem.addPlayer(_id);
+        cb?.(true);
+        startGames();
+    });
 
     socket.on("disconnect", () => {
         console.log("disconnected", socket.user._id);
         socket.leaveRoom("user-" + socket.user._id);
-        socket.leaveRoom("game-" + socket.user.game);
+        if (socket.gameId) {
+            socket.leaveRoom("game-" + socket.gameId);
+            const game = games.get(socket.gameId);
+            if (!game) return;
 
-        if (gameRoom.size === 0) {
-            games.delete(socket.user.game);
+            game.triggerUserDisconnect(socket.user._id);
         }
     });
 });
+
+async function _startGames() {
+    const { confirmed, proposals } = matchSystem.findMatches();
+
+    for (const [player1, player2] of confirmed) {
+        const engine = new Engine([player1._id, player2._id]);
+        const id = genId();
+
+        const gameRoomId = "game-" + id;
+
+        const userSocket1 = wss.room("user-" + player1._id).sockets[0] as EFSocket;
+        const userSocket2 = wss.room("user-" + player2._id).sockets[0] as EFSocket;
+
+        userSocket1.gameId = id;
+        userSocket1.joinRoom(gameRoomId);
+        userSocket2.gameId = id;
+        userSocket2.joinRoom(gameRoomId);
+        games.set(id, engine);
+
+        wss.room(gameRoomId).emit("start", "new", engine.state);
+    }
+
+    for (const proposal of proposals) {
+        wss.room("user-" + proposal.playerId).emit("match.proposal", proposal);
+        console.log("match.proposal", proposal);
+    }
+}
+
+const startGames = debounce(_startGames, 1000);

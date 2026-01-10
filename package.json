@@ -13,13 +13,14 @@
 	"type": "module",
 	"scripts": {
 		"build": "cd front && bun run build && cd ..",
-		"start": "src src/zhiva/index.ts"
+		"start": "bun src/zhiva/index.ts"
 	},
 	"devDependencies": {
 		"@types/bun": "*",
 		"typescript": "*"
 	},
 	"dependencies": {
+		"@wxn0brp/db": "^0.41.1",
 		"@wxn0brp/falcon-frame": "^0.5.9",
 		"@wxn0brp/gloves-link-server": "^0.0.13",
 		"@wxn0brp/zhiva-base-lib": "github:wxn0brP/Zhiva-base-lib"

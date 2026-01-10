@@ -1,5 +1,6 @@
 import FalconFrame from "@wxn0brp/falcon-frame";
 import { wss } from "./ws";
+import { authRouter } from "#api/account";
 
 const app = new FalconFrame();
 
@@ -10,6 +11,8 @@ if (process.env.NODE_ENV === "development") {
 } else {
     app.get("/", () => "Server is running");
 }
+
+app.use("/auth", authRouter);
 
 const server = app.l(18593);
 wss.falconFrame(app, false);

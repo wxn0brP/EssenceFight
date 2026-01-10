@@ -17,4 +17,8 @@ export class Engine {
             turn: "aggressive",
         }
     }
+
+    triggerUserDisconnect(user: Id) {
+        console.log("triggerUserDisconnect", user);
+    }
 }

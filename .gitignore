@@ -5,4 +5,10 @@ dist
 package-lock.json
 yarn.lock
 bun.lock
+
 .env
+db
+
+.zhiva-port
+identity.json
+session.json
