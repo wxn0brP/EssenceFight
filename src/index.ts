@@ -1,6 +1,7 @@
+import { googleRouter } from "#api/auth";
 import FalconFrame from "@wxn0brp/falcon-frame";
-import { wss } from "./ws";
-import { authRouter } from "#api/account";
+import "./ws";
+import { wss } from "./ws/wss";
 
 const app = new FalconFrame();
 
@@ -12,7 +13,7 @@ if (process.env.NODE_ENV === "development") {
     app.get("/", () => "Server is running");
 }
 
-app.use("/auth", authRouter);
+app.use("/auth/google", googleRouter);
 
 const server = app.l(18593);
 wss.falconFrame(app, false);

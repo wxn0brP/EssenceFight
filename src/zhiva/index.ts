@@ -15,4 +15,12 @@ apiRouter.get("/token", async (req, res) => {
         console.error("[EF-ZHI-01-1] Error:", e);
         res.status(500).json({ err: true, msg: "Internal server error" });
     }
-})
+});
+
+process.on("uncaughtException", (e) => {
+    console.error("[EF-ZHI-01-2] Error:", e);
+});
+
+process.on("unhandledRejection", (e) => {
+    console.error("[EF-ZHI-01-3] Error:", e);
+});

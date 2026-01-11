@@ -13,7 +13,6 @@
 		"typescript": "*"
 	},
 	"dependencies": {
-		"@wxn0brp/flanker-ui": "^0.4.7",
-		"@wxn0brp/gloves-link-client": "^0.0.11"
+		"@wxn0brp/flanker-ui": "^0.4.7"
 	}
 }
