@@ -1,6 +1,6 @@
 import { app, oneWindow } from "@wxn0brp/zhiva-base-lib";
 import { apiRouter } from "@wxn0brp/zhiva-base-lib/api";
-import { login } from "./account";
+import { authenticate } from "./account";
 
 oneWindow();
 app.static("public");
@@ -9,7 +9,7 @@ app.static("front");
 
 apiRouter.get("/token", async (req, res) => {
     try {
-        const data = await login();
+        const data = await authenticate();
         return { err: false, data };
     } catch (e) {
         console.error("[EF-ZHI-01-1] Error:", e);
