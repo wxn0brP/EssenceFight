@@ -11,8 +11,10 @@ export async function authenticate() {
     let authId = "none";
 
     if (existsSync(identityPath)) {
-        const identity = JSON.parse(readFileSync(identityPath, "utf-8"));
-        authId = identity.authId;
+        try {
+            const identity = JSON.parse(readFileSync(identityPath, "utf-8"));
+            authId = identity.authId;
+        } catch { }
     }
 
     return new Promise(async (resolve) => {

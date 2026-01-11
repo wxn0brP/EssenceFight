@@ -85,7 +85,7 @@ googleRouter.get("/callback", async (req, res) => {
     if (efUser) {
         wss.room("google-" + state).emit("auth.google.response", efUser._id);
     } else {
-        const newUser: { _id: string } = await db.add("google", { g: googleUser.sub });
+        const newUser = await db.add("google", { g: googleUser.sub, _id: crypto.randomUUID() });
 
         const dbUser = await db.add<User>("users", {
             sessionToken: "",
@@ -102,8 +102,8 @@ googleRouter.get("/callback", async (req, res) => {
             gamesPlayed: 0
         });
 
-        wss.room("google-" + state).emit("auth.google.response", dbUser._id);
+        wss.room("google-" + state).emit("auth.google.response", newUser._id);
     }
 
-    return "Success. You can now close this window.";
+    res.sendFile("public/oauth.html");
 });
