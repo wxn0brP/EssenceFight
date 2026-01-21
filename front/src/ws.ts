@@ -31,15 +31,15 @@ if (tokenRes.err === true) {
 
 export const user = tokenRes.data;
 
-export const ws = new GlovesLinkClient("/", {
+export const socket = new GlovesLinkClient("/", {
     token: tokenRes.data.sessionToken,
     logs: true
 });
 
-ws.on("start", (state: "new" | "join", gameState: GameState) => {
+socket.on("start", (state: "new" | "join", gameState: GameState) => {
     console.log("start", state, gameState);
 });
 
-ws.on("wait", () => {
+socket.on("wait", () => {
     console.log("wait");
 });

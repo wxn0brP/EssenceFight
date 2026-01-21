@@ -7,6 +7,7 @@ import { genId } from "@wxn0brp/db";
 import { GLSocket } from "@wxn0brp/gloves-link-server";
 import { AuthFnResult } from "@wxn0brp/gloves-link-server/types";
 import { wss } from "./wss";
+import { putCard } from "#engine/putCard";
 
 export interface EFSocket extends GLSocket {
     user: User;
@@ -60,6 +61,10 @@ wss.of("/").onConnect(async (socket: EFSocket) => {
 
             game.triggerUserDisconnect(socket.user._id);
         }
+    });
+
+    socket.on("game.put", (cardId: string) => {
+        putCard(games.get(socket.gameId), cardId, socket.user._id);
     });
 });
 

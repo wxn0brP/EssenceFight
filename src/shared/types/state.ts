@@ -34,12 +34,8 @@ export interface BoardState {
 }
 
 export interface GameState {
-    boardAggressive: BoardState;
-    boardDefensive: BoardState;
-
-    turn: "aggressive" | "defensive";
-    users: {
-        aggressive: Id;
-        defensive: Id;
-    }
+    boards: [BoardState, BoardState];
+    aggressive: 0 | 1;
+    users: [Id, Id];
+    phase: 0 | 1;
 }

@@ -8,13 +8,10 @@ export class Engine {
         const aggressive = Math.random() > 0.5 ? 0 : 1;
 
         this.state = {
-            users: {
-                aggressive: users[aggressive],
-                defensive: users[1 - aggressive],
-            },
-            boardAggressive: getEmptyBoard(),
-            boardDefensive: getEmptyBoard(),
-            turn: "aggressive",
+            boards: [getEmptyBoard(), getEmptyBoard()],
+            aggressive,
+            users,
+            phase: 0,
         }
     }
 
