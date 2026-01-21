@@ -6,7 +6,7 @@
 	"license": "MIT",
 	"type": "module",
 	"scripts": {
-		"build": "bun build src/index.ts --outdir dist --sourcemap"
+		"build": "bun build src/init.ts --outdir dist --sourcemap"
 	},
 	"devDependencies": {
 		"sass": "^1.97.2",

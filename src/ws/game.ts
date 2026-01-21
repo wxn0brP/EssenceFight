@@ -8,6 +8,8 @@ import { GLSocket } from "@wxn0brp/gloves-link-server";
 import { AuthFnResult } from "@wxn0brp/gloves-link-server/types";
 import { wss } from "./wss";
 import { putCard } from "#engine/putCard";
+import { Player } from "#shared/types/mmr";
+import { Evt_UserInfo } from "#shared/types/socket";
 
 export interface EFSocket extends GLSocket {
     user: User;
@@ -41,12 +43,15 @@ wss.of("/").auth(async ({ token }): Promise<AuthFnResult> => {
 wss.of("/").onConnect(async (socket: EFSocket) => {
     const { _id } = socket.user;
     console.log("connected", _id);
+    let inGame = false;
 
     socket.joinRoom("user-" + _id);
 
     socket.on("game.search", (cb?: Function) => {
+        if (inGame) return cb?.("You are already in a match");
         if (matchSystem._players.has(_id)) return cb?.("You are already in a match");
         matchSystem.addPlayer(_id);
+        inGame = true;
         cb?.(true);
         startGames();
     });
@@ -54,6 +59,7 @@ wss.of("/").onConnect(async (socket: EFSocket) => {
     socket.on("disconnect", () => {
         console.log("disconnected", socket.user._id);
         socket.leaveRoom("user-" + socket.user._id);
+
         if (socket.gameId) {
             socket.leaveRoom("game-" + socket.gameId);
             const game = games.get(socket.gameId);
@@ -65,6 +71,25 @@ wss.of("/").onConnect(async (socket: EFSocket) => {
 
     socket.on("game.put", (cardId: string) => {
         putCard(games.get(socket.gameId), cardId, socket.user._id);
+    });
+
+    for (const [gameId, game] of games.entries()) {
+        if (game.state.users.includes(_id)) {
+            inGame = true;
+            socket.gameId = gameId;
+            socket.joinRoom("game-" + gameId);
+            socket.emit("start", "reconnect", game.state);
+            break;
+        }
+    }
+
+    socket.on("user.info", async (cb: (user: Evt_UserInfo) => void) => {
+        const rank = await db.findOne<Player>("rank", { _id });
+        cb({
+            name: socket.user._id,
+            rank: rank.rank,
+            lp: rank.lp
+        });
     });
 });
 
