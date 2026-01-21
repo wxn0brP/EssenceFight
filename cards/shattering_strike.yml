@@ -1,0 +1,9 @@
+_id: shattering_strike
+name: Shattering strike
+type: spell
+region: the islands of the blessed tree
+frameLvl: 1
+nature: Lightning
+cost: 4
+castingType: fast
+effect: Deal 3ADmg to enemy in front line. If he has arts resist, stun him for 1 round.

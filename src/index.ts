@@ -2,8 +2,11 @@ import { googleRouter } from "#api/auth";
 import FalconFrame from "@wxn0brp/falcon-frame";
 import "./ws";
 import { wss } from "./ws/wss";
+import { FF_VQL } from "@wxn0brp/vql";
+import { VQL } from "#db";
 
 const app = new FalconFrame();
+FF_VQL(app, VQL);
 
 if (process.env.NODE_ENV === "development") {
     app.static("public");

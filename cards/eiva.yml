@@ -1,0 +1,23 @@
+_id: eiva
+name: Eiva
+type: unit
+region: Tritenity
+frameLvl: 2
+nature: "None"
+class:
+  - Sniper
+health: 3
+cost: 5
+attack:
+  physical: 6
+  arts: 0
+  true: 0
+armor:
+  physical: 0
+  arts: 0
+effect:
+  - cost: 0
+    description: |
+      Can choose between 2 attack types:
+      long-distance shoot dealing +2TDmg, if enemy is caster or sniper
+      close attack dealing +2TDmg to target if he's tank. If he dies, deal 1TDmg to every enemy surrounding him

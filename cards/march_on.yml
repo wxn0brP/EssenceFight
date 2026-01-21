@@ -1,0 +1,9 @@
+_id: march_on
+name: March on!
+type: spell
+region: Arcid
+frameLvl: 1
+nature: "None"
+cost: 3
+castingType: slow
+effect: Give +1/+1 to every unit in your front line.

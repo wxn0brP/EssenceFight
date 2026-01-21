@@ -1,28 +1,78 @@
-export type CardType = "unit" | "spell" | "rune";
+export type CardType =
+    | "unit"
+    | "spell"
+    | "rune"
+
+export type Nature =
+    | "Fire"
+    | "Water"
+    | "Earth"
+    | "Lightning"
+    | "Flora"
+    | "Wind"
+    | "Darkness"
+    | "None"
+    | "-"
+
+export type UnitClass =
+    | "Sniper"
+    | "Fighter"
+    | "Evoker"
+    | "Tank"
+    | "Leader"
+    | "Assasin"
+    | "Caster"
+
+export type CastingType =
+    | "slow"
+    | "fast"
+    | "instant"
+
+export interface Potencial {
+    requirements: string;
+    unleashed: string;
+}
+
+export interface CardEffect {
+    cost?: number;
+    description: string;
+}
 
 export interface Card {
-    id: string;
+    _id: string;
     name: string;
     type: CardType;
+    region: string;
+    frameLvl: number;
+    nature: Nature;
+    description?: string;
 }
 
 export interface UnitCard extends Card {
     type: "unit";
+    class: [UnitClass];
     health: number;
+    cost: number;
+
     attack: {
         physical: number;
         arts: number;
         true: number;
     };
+
     armor: {
         physical: number;
         arts: number;
     };
+
+    effect: [CardEffect];
+    potencial?: Potencial;
 }
 
 export interface SpellCard extends Card {
     type: "spell";
     cost: number;
+    castingType: CastingType;
     effect: string;
 }
 
@@ -48,7 +98,7 @@ export interface UnitCard_Caster extends UnitCard {
     unitType: "caster";
 }
 
-export interface UnitCard_Sniper {
+export interface UnitCard_Sniper extends UnitCard {
     unitType: "sniper";
 }
 
@@ -67,16 +117,15 @@ export type UnitCardType =
     | UnitCard_Caster
     | UnitCard_Sniper
     | UnitCard_Evoker
-    | UnitCard_Leader;
-
+    | UnitCard_Leader
 
 export type AttackCards =
     | UnitCard_Tank
     | UnitCard_Fighter
     | UnitCard_Evoker
-    | UnitCard_Assasin;
+    | UnitCard_Assasin
 
 export type DefenseCards =
     | UnitCard_Tank
     | UnitCard_Fighter
-    | UnitCard_Evoker;
+    | UnitCard_Evoker

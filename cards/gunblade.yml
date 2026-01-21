@@ -1,0 +1,9 @@
+_id: gunblade
+name: Gunblade
+type: spell
+region: Kayrin
+frameLvl: 2
+nature: "None"
+cost: 1
+castingType: instant
+effect: Deal 1PDmg to enemy. After use, i go back to the hand. Can't be used on the same target three times in the round.

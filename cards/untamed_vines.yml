@@ -1,0 +1,9 @@
+_id: untamed_vines
+name: Untamed vines
+type: spell
+region: Kayrin
+frameLvl: 1
+nature: Flora
+cost: 1
+castingType: instant
+effect: Root enemy for 1 round.

@@ -7,7 +7,7 @@ yarn.lock
 bun.lock
 
 .env
-db
+/db
 
 .zhiva-port
 identity.json

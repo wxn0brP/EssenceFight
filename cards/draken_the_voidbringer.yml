@@ -1,0 +1,30 @@
+_id: draken_the_voidbringer
+name: Draken the voidbringer
+type: unit
+region: GUARD
+frameLvl: 3
+nature: Darkness
+class:
+  - Leader
+health: 24
+cost: 0
+attack:
+  physical: 4
+  arts: 0
+  true: 0
+armor:
+  physical: 0
+  arts: 1
+effect:
+  - cost: 2
+    description: "Void sphere (fast)(2Ep) - use it on choosen enemy to deal 1TDmg. If he dies, instead drain 1HP from him."
+  - cost: 4
+    description: "Silent Voice of Void (slow)(4Ep) - use it on choosen enemy to deal 1TDmg and put bleeding on him for 2 rounds. Bleeding dmg increase for +1 every round."
+potencial:
+  requirements: score 5 takedowns and use Void sphere (spell) at least one time.
+  unleashed:
+    heal 1. Instead of Void sphere, you get Silent Voice of Void (spell).
+    If takes part in takedown, heal 1HP. If killed with Silent Voice of Void,
+    instead heal for killed enemy HP.
+description: AgrRound Start
+  You get Void sphere (spell) in your hand

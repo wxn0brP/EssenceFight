@@ -1,0 +1,22 @@
+_id: wondering_old_man
+name: Wondering old man
+type: unit
+region: Amberath
+frameLvl: 1
+nature: Water
+class:
+  - Fighter
+health: 4
+cost: 1
+attack:
+  physical: 3
+  arts: 0
+  true: 0
+armor:
+  physical: 0
+  arts: 1
+effect:
+  - cost: 1
+    description: Gain status resistance. Your next attack ignores Arts resist and deals ADmg
+  - cost: 2
+    description: Heals unit closer to him for 1hp. Give him status resistance and gain status resistance

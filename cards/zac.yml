@@ -1,0 +1,28 @@
+_id: zac
+name: Zac
+type: unit
+region: Tritenity
+frameLvl: 2
+nature: "None"
+class:
+  - Evoker
+health: 7
+cost: 5
+attack:
+  physical: 2
+  arts: 0
+  true: 0
+armor:
+  physical: 0
+  arts: 1
+effect:
+  - cost: 0
+    description: "Summon one of following (2Dp)(dmg/HP):\n‌self-deffensing turret \"zapper\" (0/3) - at the end of every round, deal 1ADmg to EVERY enemy\n‌self-shooting gun \"requiem\" (3/1) - can be deployed only on high ground. (2Ep) Deal my dmg as ADmg to choosen enemy\n‌self-healing bot \"M1M0SA\" (3/3) - at the end of the round, heal the lowest HP ally for my dmg."
+potencial:
+  requirements: deploy all 3 summons (Zapper, Requiem, M1M0SA)
+  unleashed: can deploy Altair.
+description: |
+  All summons stay on the table if Zac is killed.
+
+  Mass destruction machine "Altair" (2/1) - deploy - destroy every Zac's summon, 
+  and gain their stats and effects. When deployed, Zac can't summon other summons

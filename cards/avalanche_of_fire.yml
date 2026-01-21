@@ -1,0 +1,9 @@
+_id: avalanche_of_fire
+name: Avalanche of fire
+type: spell
+region: Kayrin
+frameLvl: 2
+nature: Fire
+cost: 7
+castingType: slow
+effect: Deal 1ADmg +1ADmg for every enemy unit deployed to all enemies except leader.
