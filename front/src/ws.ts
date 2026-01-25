@@ -1,6 +1,6 @@
+import { loader } from "#loader";
 import GlovesLinkClient from "@wxn0brp/gloves-link-client";
 import { fetchApiJson } from "@wxn0brp/zhiva-base-lib/front/api";
-import { GameState } from "_types/state";
 
 function mockApi() {
     const params = new URLSearchParams(window.location.search)
@@ -36,8 +36,10 @@ export const socket = new GlovesLinkClient("/", {
     logs: true
 });
 
-socket.on("start", (state: "new" | "join", gameState: GameState) => {
-    console.log("start", state, gameState);
+socket.on("game.start", () => {
+    qs("#view-main").style.display = "none";
+    qs("#view-game").style.display = "";
+    loader.decrement();
 });
 
 socket.on("wait", () => {

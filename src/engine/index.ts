@@ -1,10 +1,13 @@
+import { VQL } from "#db";
+import { AnyCard, UnitCard_Leader } from "#shared/types/card";
 import { GameState, Id } from "#shared/types/state";
+import { wss } from "#ws/wss";
 import { getEmptyBoard } from "./empty";
 
 export class Engine {
     public state: GameState;
 
-    constructor(users: [Id, Id]) {
+    constructor(users: [Id, Id], public gameId: Id) {
         const aggressive = Math.random() > 0.5 ? 0 : 1;
 
         this.state = {
@@ -12,10 +15,39 @@ export class Engine {
             aggressive,
             users,
             phase: 0,
+            cards: {}
         }
     }
 
     triggerUserDisconnect(user: Id) {
         console.log("triggerUserDisconnect", user);
+    }
+
+    async loadDev() {
+        const cards = await VQL.execute<AnyCard[]>("card card");
+        if ("err" in cards) return console.error(cards);
+
+        const leaderFn = (card: AnyCard) =>
+            card.type === "unit" &&
+            "class" in card &&
+            card.class.includes("Leader");
+
+        const leaders: UnitCard_Leader[] = [];
+        const others: AnyCard[] = [];
+
+        for (const card of cards) {
+            if (leaderFn(card)) leaders.push(card as any);
+            else others.push(card);
+        }
+
+        this.state.cards = Object.fromEntries(cards.map(card => [card._id, card]));
+        this.state.boards[0].cards.castle[1] = leaders[0]._id;
+        this.state.boards[1].cards.castle[1] = leaders[0]._id;
+        this.state.boards[0].cards.unused = others.map(card => card._id);
+        this.state.boards[1].cards.unused = others.map(card => card._id);
+    }
+
+    emitChanges() {
+        wss.room("game-" + this.gameId).emit("game.state", this.state);
     }
 }

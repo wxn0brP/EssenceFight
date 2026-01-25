@@ -129,3 +129,8 @@ export type DefenseCards =
     | UnitCard_Tank
     | UnitCard_Fighter
     | UnitCard_Evoker
+
+export type AnyCard =
+    | UnitCardType
+    | SpellCard
+    | RuneCard

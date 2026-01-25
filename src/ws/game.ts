@@ -69,8 +69,17 @@ wss.of("/").onConnect(async (socket: EFSocket) => {
         }
     });
 
-    socket.on("game.put", (cardId: string) => {
-        putCard(games.get(socket.gameId), cardId, socket.user._id);
+    socket.on("game.card.put", (cardId: string, position: string) => {
+        putCard(games.get(socket.gameId), cardId, position, socket.user._id);
+    });
+
+    socket.on("game.turn.end", () => {
+        const game = games.get(socket.gameId);
+        if (!game) return;
+
+        game.state.boards[game.state.aggressive].deploymentPoints++;
+        game.state.aggressive = 1 - game.state.aggressive as 0 | 1;
+        game.emitChanges();
     });
 
     for (const [gameId, game] of games.entries()) {
@@ -78,7 +87,7 @@ wss.of("/").onConnect(async (socket: EFSocket) => {
             inGame = true;
             socket.gameId = gameId;
             socket.joinRoom("game-" + gameId);
-            socket.emit("start", "reconnect", game.state);
+            socket.emit("game.start", "reconnect", game.state);
             break;
         }
     }
@@ -97,8 +106,8 @@ async function _startGames() {
     const { confirmed, proposals } = matchSystem.findMatches();
 
     for (const [player1, player2] of confirmed) {
-        const engine = new Engine([player1._id, player2._id]);
         const id = genId();
+        const engine = new Engine([player1._id, player2._id], id);
 
         const gameRoomId = "game-" + id;
 
@@ -111,7 +120,9 @@ async function _startGames() {
         userSocket2.joinRoom(gameRoomId);
         games.set(id, engine);
 
-        wss.room(gameRoomId).emit("start", "new", engine.state);
+        await engine.loadDev();
+
+        wss.room(gameRoomId).emit("game.start", "new", engine.state);
     }
 
     for (const proposal of proposals) {

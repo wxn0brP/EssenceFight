@@ -1,48 +1,41 @@
-import { loader } from "#loader";
-import { Evt_UserInfo } from "_types/socket";
+import { BoardUi } from "#ui/board";
+import "#ui/board/buttons";
+import { renderUnusedCards } from "#ui/board/unused";
 import { GameState } from "_types/state";
+import "./ui/main";
 import "./ws";
-import { socket } from "./ws";
+import { socket, user } from "./ws";
 
-const boards = document.querySelectorAll(".board");
-boards[0].id = "board_my";
-boards[1].id = "board_opponent";
-const searchGameButton = qs<HTMLButtonElement>("#search-game");
+const boards = document.querySelectorAll<HTMLDivElement>(".board");
+boards[0].id = "board_opponent";
+boards[1].id = "board_my";
 
-function searchGame() {
-    searchGameButton.disabled = true;
-    socket.emit("game.search", (data: true | string) => {
-        if (data === true) {
-            loader.increment();
-            console.log("[EF-UI-01] Game searching...");
-            searchGameButton.innerHTML = "Searching...";
-        } else {
-            console.error("[EF-UI-02] Game searching error:", data);
-            searchGameButton.innerHTML = "Search (err)";
-            searchGameButton.disabled = false;
-        }
-    });
-}
+const rows = boards[0].qs(".rows").children;
+rows[0].parentNode.insertBefore(rows[1], rows[0]);
 
-socket.on("start", (state: "new", gameState: GameState) => {
-    console.log("start", state, gameState);
-    qs("#view-main").style.display = "none";
-    qs("#view-game").style.display = "";
-    loader.decrement();
+export let gameState: GameState;
+export let myBoardIndex: number;
+
+socket.on("game.start", (startState: "new" | "join", state: GameState) => {
+    console.log("start", startState, state);
+    gameState = state;
+
+    myBoardIndex = Number(user._id === state.users[1]);
+
+    boardsComp[0].init(myBoardIndex ^ 1);
+    boardsComp[1].init(myBoardIndex);
+    renderUnusedCards(state.boards[myBoardIndex].cards.unused.map(id => state.cards[id]));
 });
 
-searchGameButton.addEventListener("click", () => searchGame());
+socket.on("game.state", (state: GameState) => {
+    Object.assign(gameState, state);
+    boardsComp[0].render();
+    boardsComp[1].render();
+    renderUnusedCards(state.boards[myBoardIndex].cards.unused.map(id => state.cards[id]));
+});
 
-function getUserInfo() {
-    loader.increment();
-
-    socket.emit("user.info", (data: Evt_UserInfo) => {
-        qs("#user-name").innerHTML = data.name;
-        qs("#ep-rank").innerHTML = data.rank;
-        qs("#ep-bar").title = data.lp.toString() + " / 100";
-        qs("#ep-bar-fill").style.setProperty("--ep-percent", `${data.lp / 100 * 100}%`);
-        loader.decrement();
-    });
-}
-
-getUserInfo();
+export const boardsComp = [
+    new BoardUi(boards[0]),
+    new BoardUi(boards[1]),
+];
+boardsComp[1].events();

@@ -6,10 +6,10 @@ export function getEmptyBoard(): BoardState {
         essencePoints: 1,
 
         cards: {
-            low: [null, null],
-            high: [null, null, null],
+            ground: [null, null, null, null, null],
             castle: [null, null, null],
             runes: [null, null],
-        }
+            unused: [],
+        },
     }
 }

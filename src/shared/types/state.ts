@@ -1,4 +1,5 @@
 import {
+    AnyCard,
     AttackCards,
     DefenseCards,
     RuneCard,
@@ -12,24 +13,10 @@ export interface BoardState {
     deploymentPoints: number;
 
     cards: {
-        low: [
-            AttackCards,
-            AttackCards,
-        ],
-        high: [
-            AttackCards,
-            DefenseCards,
-            AttackCards,
-        ],
-        castle: [
-            DefenseCards,
-            UnitCard_Leader,
-            DefenseCards
-        ],
-        runes: [
-            RuneCard,
-            RuneCard,
-        ]
+        ground: [Id, Id, Id, Id, Id],
+        castle: [Id, Id, Id],
+        runes: [Id, Id],
+        unused: Id[];
     }
 }
 
@@ -38,4 +25,5 @@ export interface GameState {
     aggressive: 0 | 1;
     users: [Id, Id];
     phase: 0 | 1;
+    cards: Record<Id, AnyCard>;
 }
