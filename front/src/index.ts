@@ -3,8 +3,8 @@ import "#ui/board/buttons";
 import { renderUnusedCards } from "#ui/board/unused";
 import { GameState } from "_types/state";
 import "./ui/main";
-import "./ws";
 import { socket, user } from "./ws";
+import "./wsEvt";
 
 const boards = document.querySelectorAll<HTMLDivElement>(".board");
 boards[0].id = "board_opponent";
@@ -38,4 +38,5 @@ export const boardsComp = [
     new BoardUi(boards[0]),
     new BoardUi(boards[1]),
 ];
+
 boardsComp[1].events();

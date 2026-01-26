@@ -40,11 +40,20 @@ export class Engine {
             else others.push(card);
         }
 
+        const leader = leaders[Math.floor(Math.random() * leaders.length)];
+
         this.state.cards = Object.fromEntries(cards.map(card => [card._id, card]));
-        this.state.boards[0].cards.castle[1] = leaders[0]._id;
-        this.state.boards[1].cards.castle[1] = leaders[0]._id;
+        this.state.boards[0].cards.castle[1] = leader._id;
+        this.state.boards[1].cards.castle[1] = leader._id;
         this.state.boards[0].cards.unused = others.map(card => card._id);
         this.state.boards[1].cards.unused = others.map(card => card._id);
+
+        const leaderState = {
+            hp: leader.health
+        }
+
+        this.state.boards[0].cards.state["castle-1"] = structuredClone(leaderState);
+        this.state.boards[1].cards.state["castle-1"] = structuredClone(leaderState);
     }
 
     emitChanges() {

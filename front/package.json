@@ -1,18 +1,17 @@
 {
-	"name": "front",
-	"version": "0.0.1",
-	"main": "dist/index.js",
-	"author": "wxn0brP",
-	"license": "MIT",
-	"type": "module",
-	"scripts": {
-		"build": "bun build src/init.ts --outdir dist --sourcemap"
-	},
-	"devDependencies": {
-		"sass": "^1.97.2",
-		"typescript": "*"
-	},
-	"dependencies": {
-		"@wxn0brp/flanker-ui": "^0.4.7"
-	}
+    "name": "front",
+    "version": "0.0.1",
+    "main": "dist/index.js",
+    "author": "wxn0brP",
+    "type": "module",
+    "scripts": {
+        "build": "bun build src/init.ts --outdir dist --sourcemap"
+    },
+    "devDependencies": {
+        "sass": "^1.97.3",
+        "typescript": "*"
+    },
+    "dependencies": {
+        "@wxn0brp/flanker-ui": "^0.5.1"
+    }
 }

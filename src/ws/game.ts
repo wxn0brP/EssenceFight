@@ -1,22 +1,22 @@
 import { User } from "#api/auth";
 import { db } from "#db";
 import { Engine } from "#engine";
+import { baseAttack } from "#engine/baseAttack";
+import { putCard } from "#engine/putCard";
 import { matchSystem } from "#mmr";
+import { Player } from "#shared/types/mmr";
+import { Evt_UserInfo } from "#shared/types/socket";
 import { debounce } from "#utils";
 import { genId } from "@wxn0brp/db";
 import { GLSocket } from "@wxn0brp/gloves-link-server";
 import { AuthFnResult } from "@wxn0brp/gloves-link-server/types";
 import { wss } from "./wss";
-import { putCard } from "#engine/putCard";
-import { Player } from "#shared/types/mmr";
-import { Evt_UserInfo } from "#shared/types/socket";
+import { games } from "#engine/games";
 
 export interface EFSocket extends GLSocket {
     user: User;
     gameId: string;
 }
-
-const games = new Map<string, Engine>();
 
 wss.of("/").auth(async ({ token }): Promise<AuthFnResult> => {
     if (!token) {
@@ -44,7 +44,6 @@ wss.of("/").onConnect(async (socket: EFSocket) => {
     const { _id } = socket.user;
     console.log("connected", _id);
     let inGame = false;
-
     socket.joinRoom("user-" + _id);
 
     socket.on("game.search", (cb?: Function) => {
@@ -70,7 +69,7 @@ wss.of("/").onConnect(async (socket: EFSocket) => {
     });
 
     socket.on("game.card.put", (cardId: string, position: string) => {
-        putCard(games.get(socket.gameId), cardId, position, socket.user._id);
+        putCard(socket, cardId, position);
     });
 
     socket.on("game.turn.end", () => {
@@ -80,6 +79,10 @@ wss.of("/").onConnect(async (socket: EFSocket) => {
         game.state.boards[game.state.aggressive].deploymentPoints++;
         game.state.aggressive = 1 - game.state.aggressive as 0 | 1;
         game.emitChanges();
+    });
+
+    socket.on("game.attack.base", (aCardPos: string, dCardPos: string) => {
+        baseAttack(socket, aCardPos, dCardPos);
     });
 
     for (const [gameId, game] of games.entries()) {

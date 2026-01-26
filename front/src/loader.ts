@@ -2,7 +2,6 @@ export namespace loader {
     const div = qs("#loader");
     let i = 0;
 
-
     export function increment() {
         div.style.display = "";
         i++;

@@ -4,7 +4,7 @@ import { Evt_UserInfo } from "_types/socket";
 
 const searchGameButton = qs<HTMLButtonElement>("#search-game");
 
-function searchGame() {
+export function searchGame() {
     searchGameButton.disabled = true;
     socket.emit("game.search", (data: true | string) => {
         if (data === true) {
@@ -18,7 +18,6 @@ function searchGame() {
         }
     });
 }
-
 
 searchGameButton.addEventListener("click", () => searchGame());
 

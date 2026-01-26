@@ -1,9 +1,9 @@
-import { socket, user } from "#ws";
-import { UiComponent } from "@wxn0brp/flanker-ui";
-import { AnyCard } from "_types/card";
-import { BoardState, GameState, Id } from "_types/state";
-import { unusedCards } from "./unused";
 import { gameState } from "#index";
+import { socket } from "#ws";
+import { UiComponent } from "@wxn0brp/flanker-ui";
+import { BoardState, CardPosition } from "_types/state";
+import { unusedCards } from "./unused";
+import { UnitCard } from "_types/card";
 
 export class BoardUi implements UiComponent {
     ui: {
@@ -45,27 +45,41 @@ export class BoardUi implements UiComponent {
         this.ui.aggressor.innerHTML = gameState.aggressive === this.index ? "true" : "false";
         this.ui.name.innerHTML = gameState.users[this.index];
 
-        this.renderCard(this.ui.ground.children[0] as HTMLDivElement, gameState.cards[boardState.cards.ground[0]]);
-        this.renderCard(this.ui.ground.children[1] as HTMLDivElement, gameState.cards[boardState.cards.ground[1]]);
-        this.renderCard(this.ui.ground.children[2] as HTMLDivElement, gameState.cards[boardState.cards.ground[2]]);
-        this.renderCard(this.ui.ground.children[3] as HTMLDivElement, gameState.cards[boardState.cards.ground[3]]);
-        this.renderCard(this.ui.ground.children[4] as HTMLDivElement, gameState.cards[boardState.cards.ground[4]]);
-
-        this.renderCard(this.ui.castle.children[0] as HTMLDivElement, gameState.cards[boardState.cards.runes[0]]);
-        this.renderCard(this.ui.castle.children[1] as HTMLDivElement, gameState.cards[boardState.cards.castle[0]]);
-        this.renderCard(this.ui.castle.children[2] as HTMLDivElement, gameState.cards[boardState.cards.castle[1]]);
-        this.renderCard(this.ui.castle.children[3] as HTMLDivElement, gameState.cards[boardState.cards.castle[2]]);
-        this.renderCard(this.ui.castle.children[4] as HTMLDivElement, gameState.cards[boardState.cards.runes[1]]);
+        for (let i = 0; i < 5; i++) {
+            this.renderCard(
+                this.ui.ground.children[i] as HTMLDivElement,
+                `ground-${i}`
+            );
+            this.renderCard(
+                this.ui.castle.children[i] as HTMLDivElement,
+                (i === 0 || i === 4) ? "runes-" + Number(Boolean(i)) : "castle-" + (i - 1)
+            );
+        }
     }
 
-    renderCard(div: HTMLDivElement, data: AnyCard) {
+    renderCard(div: HTMLDivElement, pos: CardPosition) {
+        const boardState = this.getBoardState();
+        const splitPos = pos.split("-");
+        const data = gameState.cards[boardState.cards[splitPos[0]][+splitPos[1]]] as UnitCard;
+
         if (!data) {
             div.innerHTML = "Empty";
             div.classList.add("empty");
             return;
         }
-        div.innerHTML = data.name;
-        div.title = JSON.stringify(data, null, 2);
+
+        const state = boardState.cards.state[pos];
+
+        div.innerHTML = `
+<p>${data.name}</p>
+<p>${data.class.join(", ")}</p>
+<p>${state.hp}</p>
+`;
+
+        div.oncontextmenu = (e) => {
+            e.preventDefault();
+            alert(JSON.stringify(Object.assign({}, { state }, { data }), null, 2));
+        }
     }
 
     events() {

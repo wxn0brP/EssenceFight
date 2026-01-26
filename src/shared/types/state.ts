@@ -1,12 +1,13 @@
 import {
-    AnyCard,
-    AttackCards,
-    DefenseCards,
-    RuneCard,
-    UnitCard_Leader
+    AnyCard
 } from "./card";
 
 export type Id = string;
+export type CardPosition = string;
+
+export interface CardState {
+    hp: number;
+}
 
 export interface BoardState {
     essencePoints: number;
@@ -17,6 +18,7 @@ export interface BoardState {
         castle: [Id, Id, Id],
         runes: [Id, Id],
         unused: Id[];
+        state: Record<string, CardState>;
     }
 }
 

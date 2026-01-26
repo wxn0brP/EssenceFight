@@ -1,4 +1,3 @@
-import { loader } from "#loader";
 import GlovesLinkClient from "@wxn0brp/gloves-link-client";
 import { fetchApiJson } from "@wxn0brp/zhiva-base-lib/front/api";
 
@@ -33,15 +32,8 @@ export const user = tokenRes.data;
 
 export const socket = new GlovesLinkClient("/", {
     token: tokenRes.data.sessionToken,
-    logs: true
+    logs: true,
+    reConnectInterval: 3000,
 });
 
-socket.on("game.start", () => {
-    qs("#view-main").style.display = "none";
-    qs("#view-game").style.display = "";
-    loader.decrement();
-});
-
-socket.on("wait", () => {
-    console.log("wait");
-});
+(window as any).mgl_socket = socket;

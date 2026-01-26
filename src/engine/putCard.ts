@@ -1,33 +1,45 @@
-import { Engine } from "#engine";
+import { UnitCard } from "#shared/types/card";
+import { CardPosition } from "#shared/types/state";
+import { EFSocket } from "#ws/game";
 import { Id } from "@wxn0brp/db";
+import { getBaseData } from "./utils/baseData";
 import { getBoards } from "./utils/board";
+import { parseCardPosition } from "./utils/cardPosition";
+import { socket400 } from "./utils/err";
 
-const logPrefix = (index: string) => `[EF-SRV-ENG-CARD-PUT-${index}]`;
+const logPrefix = `CARD-PUT`;
 
-export async function putCard(engine: Engine, cardId: Id, positionData: string, playerId: Id) {
+export async function putCard(socket: EFSocket, cardId: Id, positionData: CardPosition) {
+    const { engine, playerId } = getBaseData(socket);
+
     if (playerId !== engine.state.users[engine.state.aggressive])
-        return console.error(`${logPrefix("01")} your turn`);
+        return socket400(socket, logPrefix, "01", "your turn");
 
     const { aggressiveBoard } = getBoards(engine.state);
 
     if (aggressiveBoard.deploymentPoints <= 0)
-        return console.error(`${logPrefix("02")} No deployment points`);
+        return socket400(socket, logPrefix, "02", "No deployment points");
 
     const unusedIndex = aggressiveBoard.cards.unused.findIndex(card => card === cardId);
     if (unusedIndex === -1)
-        return console.error(`${logPrefix("03")} Card not found`);
+        return socket400(socket, logPrefix, "03", "Card not found");
 
-    const [position, indexString] = positionData.split("-");
-    const index = Number(indexString);
-
+    const [position, index] = parseCardPosition(positionData);
     if (aggressiveBoard.cards[position][index])
-        return console.error(`${logPrefix("04")} Fobidden move`);
+        return socket400(socket, logPrefix, "04", "Fobidden move");
 
-    const card = structuredClone(aggressiveBoard.cards.unused[unusedIndex]);
+    const cardData = engine.state.cards[cardId];
+    if (!cardData || cardData.type !== "unit")
+        return socket400(socket, logPrefix, "05", "Fobidden card (not unit)");
+
     aggressiveBoard.cards.unused.splice(unusedIndex, 1);
 
-    aggressiveBoard.cards[position][index] = card;
+    aggressiveBoard.cards[position][index] = cardId;
     aggressiveBoard.deploymentPoints--;
+
+    aggressiveBoard.cards.state[positionData] = {
+        hp: (engine.state.cards[cardId] as UnitCard).health
+    }
 
     engine.emitChanges();
 }

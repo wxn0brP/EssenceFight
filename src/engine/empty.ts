@@ -10,6 +10,7 @@ export function getEmptyBoard(): BoardState {
             castle: [null, null, null],
             runes: [null, null],
             unused: [],
+            state: {},
         },
     }
 }
