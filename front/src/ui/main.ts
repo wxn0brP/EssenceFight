@@ -2,7 +2,7 @@ import { loader } from "#loader";
 import { socket } from "#ws";
 import { Evt_UserInfo } from "_types/socket";
 
-const searchGameButton = qs<HTMLButtonElement>("#search-game");
+export const searchGameButton = qs<HTMLButtonElement>("#search-game");
 
 export function searchGame() {
     searchGameButton.disabled = true;

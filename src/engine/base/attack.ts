@@ -1,10 +1,11 @@
+import { checkWin } from "#engine/utils/chcekWin";
 import { UnitCard } from "#shared/types/card";
 import { CardPosition } from "#shared/types/state";
 import { EFSocket } from "#ws/game";
-import { getBaseData } from "./utils/baseData";
-import { getBoards } from "./utils/board";
-import { parseCardPosition } from "./utils/cardPosition";
-import { socket400 } from "./utils/err";
+import { getBaseData } from "../utils/baseData";
+import { getBoards } from "../utils/board";
+import { parseCardPosition } from "../utils/cardPosition";
+import { socket400 } from "../utils/err";
 
 const logPrefix = "ATTACK-BASE";
 
@@ -26,7 +27,7 @@ export function baseAttack(
     if (defensiveCardPosition[0] === "ground" && !defensiveBoard.cards.ground.some(Boolean))
         return socket400(socket, logPrefix, "10", "Fobidden attack");
 
-    if (defensiveCardPosition[0] === "castle" && defensiveBoard.cards.castle.some(Boolean))
+    if (defensiveCardPosition[0] === "castle" && defensiveBoard.cards.ground.some(Boolean))
         return socket400(socket, logPrefix, "11", "Fobidden attack");
 
     if (defensiveCardPosition[0] === "runes")
@@ -57,5 +58,6 @@ export function baseAttack(
         defensiveBoard.cards.state[defensiveCardPositionData] = null;
     }
 
+    if (checkWin(engine)) return;
     engine.emitChanges();
 }

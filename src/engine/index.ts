@@ -27,6 +27,10 @@ export class Engine {
         const cards = await VQL.execute<AnyCard[]>("card card");
         if ("err" in cards) return console.error(cards);
 
+        this.state.aggressive = 0;
+        this.state.boards[0].deploymentPoints = 20;
+        this.state.boards[1].deploymentPoints = 20;
+
         const leaderFn = (card: AnyCard) =>
             card.type === "unit" &&
             "class" in card &&

@@ -100,12 +100,4 @@
     article {
         @include cardStyle;
     }
-
-    &.active article.empty {
-        cursor: pointer;
-    }
-
-    &.active article:not(.empty) {
-        cursor: not-allowed;
-    }
 }

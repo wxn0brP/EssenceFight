@@ -1,8 +1,8 @@
 import { User } from "#api/auth";
 import { db } from "#db";
 import { Engine } from "#engine";
-import { baseAttack } from "#engine/baseAttack";
-import { putCard } from "#engine/putCard";
+import { baseAttack } from "#engine/base/attack";
+import { putCard } from "#engine/base/putCard";
 import { matchSystem } from "#mmr";
 import { Player } from "#shared/types/mmr";
 import { Evt_UserInfo } from "#shared/types/socket";
@@ -43,14 +43,12 @@ wss.of("/").auth(async ({ token }): Promise<AuthFnResult> => {
 wss.of("/").onConnect(async (socket: EFSocket) => {
     const { _id } = socket.user;
     console.log("connected", _id);
-    let inGame = false;
     socket.joinRoom("user-" + _id);
 
     socket.on("game.search", (cb?: Function) => {
-        if (inGame) return cb?.("You are already in a match");
+        if (socket.gameId) return cb?.("You are already in a match");
         if (matchSystem._players.has(_id)) return cb?.("You are already in a match");
         matchSystem.addPlayer(_id);
-        inGame = true;
         cb?.(true);
         startGames();
     });
@@ -87,7 +85,6 @@ wss.of("/").onConnect(async (socket: EFSocket) => {
 
     for (const [gameId, game] of games.entries()) {
         if (game.state.users.includes(_id)) {
-            inGame = true;
             socket.gameId = gameId;
             socket.joinRoom("game-" + gameId);
             socket.emit("game.start", "reconnect", game.state);
