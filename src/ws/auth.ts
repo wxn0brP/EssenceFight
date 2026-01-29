@@ -3,13 +3,23 @@ import { db } from "#db";
 import { GLSocket } from "@wxn0brp/gloves-link-server";
 import { wss } from "./wss";
 
-wss.of("/auth").onConnect(async (socket: GLSocket) => {
-    const state = crypto.randomUUID();
+const namespace = wss.of("/auth");
+
+namespace.auth(async () => {
+    return {
+        status: 200,
+        user: {
+            _id: crypto.randomUUID()
+        }
+    }
+});
+
+namespace.onConnect(async (socket: GLSocket) => {
+    const id = socket.user._id;
 
     function google() {
-        stateStore.add(state);
-        socket.emit("auth.google", state);
-        socket.joinRoom("google-" + state);
+        stateStore.add(id);
+        socket.emit("auth.google", id);
     }
 
     socket.on("auth.request", async (authId) => {

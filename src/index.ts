@@ -20,4 +20,4 @@ app.use("/auth/google", googleRouter);
 
 const server = app.l(18593);
 wss.falconFrame(app, false);
-wss.createServer(server);
+wss.attachToHttpServer(server);

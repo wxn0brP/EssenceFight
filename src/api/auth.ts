@@ -20,6 +20,8 @@ const {
 
 export const stateStore = new Set<string>();
 
+const authNamespace = wss.of("/auth");
+
 googleRouter.get("/", (req, res) => {
     if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET || !GOOGLE_REDIRECT_URI) {
         res.status(500).send("The Google OAuth client is not configured");
@@ -83,7 +85,7 @@ googleRouter.get("/callback", async (req, res) => {
 
     const efUser = await db.findOne<{ _id: string }>("google", { g: googleUser.sub });
     if (efUser) {
-        wss.room("google-" + state).emit("auth.google.response", efUser._id);
+        authNamespace.userRoom(state).emit("auth.google.response", efUser._id);
     } else {
         const newUser = await db.add("google", { g: googleUser.sub, _id: crypto.randomUUID() });
 
@@ -102,7 +104,7 @@ googleRouter.get("/callback", async (req, res) => {
             gamesPlayed: 0
         });
 
-        wss.room("google-" + state).emit("auth.google.response", newUser._id);
+        authNamespace.userRoom(state).emit("auth.google.response", newUser._id);
     }
 
     res.sendFile("public/oauth.html");
