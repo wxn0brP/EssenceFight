@@ -30,10 +30,24 @@
             <div class="notification-content">
                 <h1 id="notification-title">VICTORY</h1>
                 <p id="notification-message">You have defeated your opponent!</p>
-                <button id="notification-close">Continue</button>
+                <div id="notification-actions">
+                    <button id="notification-close">Continue</button>
+                </div>
             </div>
         </div>
         <div id="turn-banner">YOUR TURN</div>
+    </div>
+
+    <div id="match-proposal" class="notification-overlay" style="display: none;">
+        <div class="notification-content">
+            <h1>Match Found</h1>
+            <p>Wait, this match seems unfair (MMR difference > 40).</p>
+            <p>Do you want to proceed?</p>
+            <div class="match-actions" style="display: flex; gap: 1rem; justify-content: center;">
+                <button id="match-accept" style="background: var(--accent);">Accept</button>
+                <button id="match-decline" style="background: #e74c3c;">Decline</button>
+            </div>
+        </div>
     </div>
     <div id="loader" style="display: none;">
         <div class="loader"></div>
@@ -59,7 +73,14 @@
             </div>
         </header>
         <div id="main">
-            <button id="search-game">Search</button>
+            <div id="deck-builder">
+                <h3>Select Cards</h3>
+                <div id="available-cards" class="card-grid"></div>
+                <div class="deck-controls">
+                    <span id="deck-count">Selected: 0/15</span>
+                    <button id="search-game">Search Game</button>
+                </div>
+            </div>
         </div>
     </div>
 

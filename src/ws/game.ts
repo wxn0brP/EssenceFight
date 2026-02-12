@@ -1,10 +1,12 @@
 import { User } from "#api/auth";
-import { db } from "#db";
+import { db, VQL } from "#db";
 import { baseAttack } from "#engine/base/attack";
 import { putCard } from "#engine/base/putCard";
 import { games } from "#engine/games";
-import { startGames } from "#engine/startGames";
+import { startGame, startGames } from "#engine/startGames";
 import { matchSystem } from "#mmr";
+import { AnyCard } from "#shared/types/card";
+import { Deck } from "#shared/types/deck";
 import { Player } from "#shared/types/mmr";
 import { Evt_UserInfo } from "#shared/types/socket";
 import { GLSocket } from "@wxn0brp/gloves-link-server";
@@ -44,16 +46,44 @@ namespace.onConnect(async (socket: EFSocket) => {
     const { _id } = socket.user;
     console.log("connected", _id);
 
-    socket.on("game.search", (cb?: Function) => {
-        if (socket.gameId) return cb?.("You are already in a match");
-        if (matchSystem._players.has(_id)) return cb?.("You are already in a match");
-        matchSystem.addPlayer(_id);
-        cb?.(true);
+    socket.on("game.search", async (cardIds: string[], cb: (data: true | string) => void) => {
+        if (socket.gameId) return cb("You are already in a match");
+        if (matchSystem._players.has(_id)) return cb("You are already in a match");
+
+        if (cardIds.length > 15) return cb("Max 15 cards allowed");
+
+        await db.updateOneOrAdd("deck", { _id }, { cards: cardIds });
+
+        matchSystem.addPlayer(_id, cardIds);
+        cb(true);
         startGames();
+    });
+
+    socket.on("match.proposal.respond", async (accept: boolean) => {
+        const players = matchSystem.handleConsent(_id, accept);
+        if (players) {
+            await startGame(players[0], players[1]);
+        }
+    });
+
+    socket.on("cards.list", async (cb: (data: Deck) => void) => {
+        const cards = await VQL.execute<AnyCard[]>("card card");
+        const deck = await db.findOne<{ cards: string[] }>("deck", { _id });
+
+        if ("err" in cards)
+            return cb({ cards: [], savedDeck: [] });
+
+        cb({
+            cards,
+            savedDeck: deck?.cards || []
+        });
     });
 
     socket.on("disconnect", () => {
         console.log("disconnected", socket.user._id);
+
+        if (matchSystem._players.has(_id))
+            matchSystem.removePlayer(_id);
 
         if (socket.gameId) {
             const game = games.get(socket.gameId);

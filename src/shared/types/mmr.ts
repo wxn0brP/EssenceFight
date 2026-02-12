@@ -22,11 +22,16 @@ export interface MatchProposal {
 }
 
 export interface PendingMatch {
-    player1: Player;
-    player2: Player;
+    player1: ConfirmedMatchPlayer;
+    player2: ConfirmedMatchPlayer;
     requiresConsent: boolean;
     accepted: {
         player1: boolean | null;
         player2: boolean | null;
     };
+}
+
+export interface ConfirmedMatchPlayer {
+    player: Player;
+    deck: string[];
 }

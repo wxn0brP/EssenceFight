@@ -27,7 +27,7 @@ export class Engine {
         console.log("triggerUserDisconnect", user);
     }
 
-    async loadDev() {
+    async load(deck1Ids: string[] = [], deck2Ids: string[] = []) {
         const cards = await VQL.execute<AnyCard[]>("card card");
         if ("err" in cards) return console.error(cards);
 
@@ -35,33 +35,50 @@ export class Engine {
         this.state.boards[0].deploymentPoints = 20;
         this.state.boards[1].deploymentPoints = 20;
 
-        const leaderFn = (card: AnyCard) =>
-            card.type === "unit" &&
-            "class" in card &&
-            card.class.includes("Leader");
-
-        const leaders: UnitCard_Leader[] = [];
-        const others: AnyCard[] = [];
-
-        for (const card of cards) {
-            if (leaderFn(card)) leaders.push(card as any);
-            else others.push(card);
-        }
-
-        const leader = leaders[Math.floor(Math.random() * leaders.length)];
-
         this.state.cards = Object.fromEntries(cards.map(card => [card._id, card]));
-        this.state.boards[0].cards.castle[1] = leader._id;
-        this.state.boards[1].cards.castle[1] = leader._id;
-        this.state.boards[0].cards.unused = others.map(card => card._id);
-        this.state.boards[1].cards.unused = others.map(card => card._id);
 
-        const leaderState = {
-            hp: leader.health
-        }
+        const processDeck = (deckIds: string[], boardIndex: number) => {
+            const deckCards = deckIds.map(id => this.state.cards[id]).filter(Boolean);
 
-        this.state.boards[0].cards.state["castle-1"] = structuredClone(leaderState);
-        this.state.boards[1].cards.state["castle-1"] = structuredClone(leaderState);
+            const leaderFn = (card: AnyCard) =>
+                card.type === "unit" &&
+                "class" in card &&
+                card.class.includes("Leader");
+
+            let leader: UnitCard_Leader | undefined = deckCards.find(leaderFn) as UnitCard_Leader;
+            let others = deckCards.filter(c => c !== leader);
+
+            if (deckCards.length === 0 || !leader) {
+                const allLeaders = cards.filter(leaderFn) as UnitCard_Leader[];
+                const allOthers = cards.filter(c => !leaderFn(c));
+
+                if (!leader)
+                    leader = allLeaders[Math.floor(Math.random() * allLeaders.length)];
+
+                if (deckCards.length === 0) {
+                    for (let i = allOthers.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [allOthers[i], allOthers[j]] = [allOthers[j], allOthers[i]];
+                    }
+                    others = allOthers;
+                }
+            }
+
+            if (others.length > 15)
+                others = others.slice(0, 15);
+
+            this.state.boards[boardIndex].cards.castle[1] = leader._id;
+            this.state.boards[boardIndex].cards.unused = others.map(card => card._id);
+
+            const leaderState = {
+                hp: leader.health
+            };
+
+            this.state.boards[boardIndex].cards.state["castle-1"] = structuredClone(leaderState);
+        };
+
+        processDeck(deck1Ids, 0);
+        processDeck(deck2Ids, 1);
     }
 
     emit(type: string, ...args: any[]) {
