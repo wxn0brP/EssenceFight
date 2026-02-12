@@ -1,9 +1,10 @@
 import { loader } from "#loader";
 import { boardsComp, gameState } from "#state";
-import { renderUnusedCards } from "#ui/board/unused";
+import { renderUnusedCards, resetUnusedCards } from "#ui/board/unused";
 import { searchGame, searchGameButton } from "#ui/main";
+import { showNotification } from "#ui/notifications";
 import { socket, user } from "#ws";
-import { GameState } from "_types/state";
+import { CardPosition, GameState } from "_types/state";
 
 socket.on("game.start", () => {
     qs("#view-main").style.display = "none";
@@ -15,10 +16,34 @@ socket.on("game.start", () => {
 
 socket.on("game.win", (winner: number) => {
     const isWin = gameState.myBoardIndex === winner;
-    alert(isWin ? "You win!" : "You lose!");
-    qs("#view-main").style.display = "";
-    qs("#view-game").style.display = "none";
-})
+    showNotification(
+        isWin ? "VICTORY" : "DEFEAT",
+        isWin ? "You have defeated your opponent!" : "You have been defeated!",
+        isWin ? "victory" : "defeat",
+        () => {
+            qs("#view-main").style.display = "";
+            qs("#view-game").style.display = "none";
+        }
+    );
+});
+
+socket.on("game.attack", (attackerIndex: number, aPos: CardPosition, dPos: CardPosition) => {
+    const isMeAttacker = attackerIndex === gameState.myBoardIndex;
+    if (isMeAttacker) return;
+
+    // Determine boards
+    // boardsComp[0] is opponent, boardsComp[1] is me
+    const attackerBoard = isMeAttacker ? boardsComp[1] : boardsComp[0];
+    const defenderBoard = isMeAttacker ? boardsComp[0] : boardsComp[1];
+
+    // Find elements
+    const attEl = attackerBoard.getCardElement(aPos);
+    const defEl = defenderBoard.getCardElement(dPos);
+
+    if (attEl && defEl) {
+        attackerBoard.animateAttack(attEl, defEl);
+    }
+});
 
 socket.on("game.start", (startState: "new" | "join", state: GameState) => {
     console.log("start", startState, state);
@@ -29,6 +54,7 @@ socket.on("game.start", (startState: "new" | "join", state: GameState) => {
 
     boardsComp[0].init(gameState.myBoardIndex ^ 1);
     boardsComp[1].init(gameState.myBoardIndex);
+    resetUnusedCards();
     renderUnusedCards(state.boards[gameState.myBoardIndex].cards.unused.map(id => state.cards[id]));
 });
 

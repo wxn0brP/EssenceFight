@@ -1,4 +1,6 @@
+@import url("./animations.css");
 @import url("./board.css");
+@import url("./notif.css");
 @import url("./main.css");
 
 * {
@@ -11,6 +13,7 @@
     --txt: #fff;
     --back: #111;
     --accent: #0400ff;
+    --accent-rgb: 4, 0, 255;
 }
 
 body {

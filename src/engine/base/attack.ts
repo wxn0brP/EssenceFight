@@ -1,4 +1,4 @@
-import { checkWin } from "#engine/utils/chcekWin";
+import { checkWin } from "#engine/utils/checkWin";
 import { UnitCard } from "#shared/types/card";
 import { CardPosition } from "#shared/types/state";
 import { EFSocket } from "#ws/game";
@@ -57,6 +57,8 @@ export function baseAttack(
         defensiveBoard.cards[defensiveCardPosition[0]][defensiveCardPosition[1]] = null;
         defensiveBoard.cards.state[defensiveCardPositionData] = null;
     }
+
+    engine.emit("game.attack", engine.state.aggressive, aggressiveCardPositionData, defensiveCardPositionData);
 
     if (checkWin(engine)) return;
     engine.emitChanges();

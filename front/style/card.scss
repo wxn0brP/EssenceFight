@@ -1,0 +1,129 @@
+@mixin cardStyle {
+    width: 140px;
+    min-width: 140px;
+    height: 200px;
+    background-color: #1a1a1a;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    color: white;
+
+    .card-art {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: 0;
+        opacity: 0.5;
+        transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    .card-content {
+        z-index: 2;
+        position: relative;
+        height: 100%;
+        width: 100%;
+    }
+
+    &:hover {
+        .card-art {
+            opacity: 0.8;
+            transform: scale(1.05);
+        }
+    }
+
+    &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        z-index: 3;
+        pointer-events: none;
+    }
+
+    &:hover::before {
+        opacity: 1;
+    }
+}
+
+.card-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 10px;
+    position: relative;
+
+    .card-header {
+        text-align: center;
+
+        .card-name {
+            font-size: 15px;
+            margin: 0;
+            font-weight: 700;
+            color: #fff;
+            text-shadow: 0 2px 3px rgba(0, 0, 0, 0.9);
+            line-height: 1.2;
+        }
+    }
+
+    .card-body {
+        flex-grow: 1;
+        position: relative;
+
+        .card-class {
+            position: absolute;
+            bottom: 10px;
+            left: 0;
+            right: 0;
+            margin: auto;
+            font-size: 11px;
+            color: #eee;
+            background-color: rgba(0, 0, 0, 0.6);
+            padding: 2px 8px;
+            border-radius: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            width: fit-content;
+        }
+    }
+
+    .card-footer {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        background: none;
+        padding: 0;
+
+        .card-stat {
+            font-size: 18px;
+            color: #fff;
+            font-weight: 700;
+            text-shadow: 0 0 8px rgba(0, 0, 0, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hp {
+            color: #ff5555;
+            border-color: #ff5555;
+        }
+
+        .attack {
+            color: #f0e68c;
+            border-color: #f0e68c;
+        }
+    }
+}

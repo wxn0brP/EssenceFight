@@ -2,10 +2,12 @@ import { VQL } from "#db";
 import { AnyCard, UnitCard_Leader } from "#shared/types/card";
 import { GameState, Id } from "#shared/types/state";
 import { wss } from "#ws/wss";
+import { Room } from "@wxn0brp/gloves-link-server/room";
 import { getEmptyBoard } from "./empty";
 
 export class Engine {
     public state: GameState;
+    public socketRoom: Room;
 
     constructor(users: [Id, Id], public gameId: Id) {
         const aggressive = Math.random() > 0.5 ? 0 : 1;
@@ -17,6 +19,8 @@ export class Engine {
             phase: 0,
             cards: {}
         }
+
+        this.socketRoom = wss.room("game-" + this.gameId);
     }
 
     triggerUserDisconnect(user: Id) {
@@ -60,7 +64,11 @@ export class Engine {
         this.state.boards[1].cards.state["castle-1"] = structuredClone(leaderState);
     }
 
+    emit(type: string, ...args: any[]) {
+        this.socketRoom.emit(type, ...args);
+    }
+
     emitChanges() {
-        wss.room("game-" + this.gameId).emit("game.state", this.state);
+        this.emit("game.state", this.state);
     }
 }

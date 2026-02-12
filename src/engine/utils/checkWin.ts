@@ -3,7 +3,6 @@ import { games } from "#engine/games";
 import { resolveMatch } from "#mmr/calc";
 import { BoardState } from "#shared/types/state";
 import { EFSocket } from "#ws/game";
-import { wss } from "#ws/wss";
 
 function checkLeaderAlive(board: BoardState) {
     return !!board.cards.castle[1];
@@ -17,9 +16,8 @@ export function checkWin(engine: Engine) {
     if (isAlive0 && isAlive1) return;
 
     const winner = isAlive0 ? 0 : 1;
-    const { gameId } = engine;
+    const { gameId, socketRoom: room } = engine;
 
-    const room = wss.room("game-" + gameId);
     room.emit("game.win", winner);
     room.sockets.forEach((client: EFSocket) => {
         client.gameId = null;

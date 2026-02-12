@@ -1,0 +1,127 @@
+#game-notification {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+
+    &.visible {
+        opacity: 1;
+        pointer-events: all;
+    }
+
+    .notification-content {
+        background: radial-gradient(circle, #222 0%, #111 100%);
+        border: 2px solid #555;
+        padding: 40px;
+        border-radius: 20px;
+        text-align: center;
+        box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
+        transform: scale(0.8);
+        transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        min-width: 400px;
+
+        h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+
+            &.victory {
+                background: linear-gradient(to bottom, #ffecb3, #ffca28);
+                -webkit-background-clip: text;
+                background-clip: text;
+                -webkit-text-fill-color: transparent;
+                text-shadow: 0 0 20px rgba(255, 215, 0, 0.6);
+            }
+
+            &.defeat {
+                background: linear-gradient(to bottom, #ef9a9a, #c62828);
+                -webkit-background-clip: text;
+                background-clip: text;
+                -webkit-text-fill-color: transparent;
+                text-shadow: 0 0 20px rgba(255, 0, 0, 0.6);
+            }
+        }
+
+        p {
+            font-size: 20px;
+            color: #ccc;
+            margin-bottom: 30px;
+        }
+
+        button {
+            padding: 12px 30px;
+            font-size: 16px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+
+            &:hover {
+                transform: scale(1.05);
+                box-shadow: 0 0 20px rgba(var(--accent-rgb), 0.5);
+            }
+        }
+    }
+}
+
+// Turn Banner
+#turn-banner {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 80px;
+    font-weight: 900;
+    text-transform: uppercase;
+    color: white;
+    text-shadow: 0 0 20px rgba(0, 0, 0, 0.8), 0 0 30px rgba(var(--accent-rgb), 0.8);
+    pointer-events: none;
+    z-index: 1500;
+    opacity: 0;
+    letter-spacing: 10px;
+}
+
+@keyframes turnBannerAnim {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.5);
+        filter: blur(20px);
+    }
+
+    20% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.2);
+        filter: blur(0);
+    }
+
+    80% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+        filter: blur(0);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(1.5);
+        filter: blur(10px);
+    }
+}
+
+.turn-banner-show {
+    animation: turnBannerAnim 2.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
