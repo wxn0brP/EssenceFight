@@ -5,7 +5,9 @@
     "author": "wxn0brP",
     "type": "module",
     "scripts": {
-        "build": "bun build src/init.ts --outdir dist --sourcemap"
+        "build:ts": "bun build src/init.ts --outdir dist --sourcemap",
+        "build:style": "bunx sass style:dist",
+        "build": "bun run build:ts && bun run build:style"
     },
     "devDependencies": {
         "sass": "^1.97.3",

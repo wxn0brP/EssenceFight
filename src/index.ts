@@ -9,6 +9,11 @@ const app = new FalconFrame();
 FF_VQL(app, VQL);
 
 if (process.env.NODE_ENV === "development") {
+    app.use("/", (req, res, next) => {
+        if (req.socket.remoteAddress !== "127.0.0.1" && req.url === "/")
+            return res.send("Server is running");
+        next();
+    });
     app.static("public");
     app.static("front/dist");
     app.static("front");

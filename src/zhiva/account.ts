@@ -1,11 +1,15 @@
 import GlovesLinkClient from "@wxn0brp/gloves-link-client";
 import { spawn } from "bun";
 import { existsSync, readFileSync, writeFileSync } from "fs";
+import { serverUrl } from "./config";
 
-const SERVER = process.env.ESSENCE_FIGHT_SERVER || "http://localhost:18593";
 const identityPath = "./identity.json";
 
-type AuthResult = { _id: string, sessionToken: string, authId: string };
+interface AuthResult {
+    _id: string;
+    sessionToken: string;
+    authId: string
+}
 
 export async function authenticate() {
     let authId = "none";
@@ -18,7 +22,8 @@ export async function authenticate() {
     }
 
     return new Promise(async (resolve) => {
-        const client = new GlovesLinkClient(SERVER + "/auth");
+        const authUrl = new URL("/auth", serverUrl);
+        const client = new GlovesLinkClient(authUrl.toString());
 
         client.on("auth.response", (result: AuthResult) => {
             resolve(result);
@@ -27,7 +32,8 @@ export async function authenticate() {
         });
 
         client.on("auth.google", (state: string) => {
-            const url = `${SERVER}/auth/google?state=${state}`;
+            const urlPath = `/auth/google?state=${state}`;
+            const url = new URL(urlPath, serverUrl).toString();
 
             const os = process.platform;
             if (os === "win32") spawn(["start", url]);

@@ -1,11 +1,16 @@
 import { app, oneWindow } from "@wxn0brp/zhiva-base-lib";
 import { apiRouter } from "@wxn0brp/zhiva-base-lib/api";
 import { authenticate } from "./account";
+import { serverUrl } from "./config";
 
 oneWindow();
 app.static("public");
 app.static("front/dist");
 app.static("front");
+
+apiRouter.get("/config/socket", async () => {
+    return { err: false, url: serverUrl };
+});
 
 apiRouter.get("/token", async (req, res) => {
     try {

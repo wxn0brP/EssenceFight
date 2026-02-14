@@ -1,10 +1,10 @@
 {
-	"cmd": "bun run build",
-	"watch": [
+	cmd: "bun run build:ts",
+	watch: [
 		"src"
 	],
-	"restart_cmd": "clear",
-	"events": {
-		"rs": "clear"
+	restart_cmd: "clear",
+	events: {
+		rs: "clear"
 	}
 }

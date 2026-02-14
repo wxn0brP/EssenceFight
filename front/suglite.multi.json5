@@ -1,6 +1,6 @@
 [
     {
-        cmd: "sass style:dist",
+        cmd: "bun run build:style",
         watch: [
             "style"
         ]
