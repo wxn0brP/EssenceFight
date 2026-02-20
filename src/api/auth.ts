@@ -83,13 +83,13 @@ googleRouter.get("/callback", async (req, res) => {
 
     const googleUser = await userRes.json() as { sub: string, picture: string };
 
-    const efUser = await db.findOne<{ _id: string }>("google", { g: googleUser.sub });
+    const efUser = await db.google.findOne({ g: googleUser.sub });
     if (efUser) {
         authNamespace.userRoom(state).emit("auth.google.response", efUser._id);
     } else {
-        const newUser = await db.add("google", { g: googleUser.sub, _id: crypto.randomUUID() });
+        const newUser = await db.google.add({ g: googleUser.sub, _id: crypto.randomUUID() });
 
-        const dbUser = await db.add<User>("users", {
+        const dbUser = await db.users.add({
             sessionToken: "",
             sessionExpiry: 1,
             _id: undefined,

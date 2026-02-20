@@ -1,7 +1,7 @@
 import { Player, RankTier } from "../shared/types/mmr";
 import { db } from "#db";
 
-export const RankPlayersC = db.c<Player>("rank");
+export const RankPlayersC = db.rank;
 
 export const RANKS: RankTier[] = [
     "BRONZE",

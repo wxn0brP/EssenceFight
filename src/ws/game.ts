@@ -28,7 +28,7 @@ namespace.auth(async ({ token }): Promise<AuthFnResult> => {
         }
     }
 
-    const user = await db.findOne<User>("users", { sessionToken: token });
+    const user = await db.users.findOne({ sessionToken: token });
     if (!user) {
         return {
             status: 401,
@@ -52,7 +52,7 @@ namespace.onConnect(async (socket: EFSocket) => {
 
         if (cardIds.length > 15) return cb("Max 15 cards allowed");
 
-        await db.updateOneOrAdd("deck", { _id }, { cards: cardIds });
+        await db.deck.updateOneOrAdd({ _id }, { cards: cardIds });
 
         matchSystem.addPlayer(_id, cardIds);
         cb(true);
@@ -68,7 +68,7 @@ namespace.onConnect(async (socket: EFSocket) => {
 
     socket.on("cards.list", async (cb: (data: Deck) => void) => {
         const cards = await VQL.execute<AnyCard[]>("card card");
-        const deck = await db.findOne<{ cards: string[] }>("deck", { _id });
+        const deck = await db.deck.findOne({ _id });
 
         if ("err" in cards)
             return cb({ cards: [], savedDeck: [] });
@@ -120,7 +120,7 @@ namespace.onConnect(async (socket: EFSocket) => {
     }
 
     socket.on("user.info", async (cb: (user: Evt_UserInfo) => void) => {
-        const rank = await db.findOne<Player>("rank", { _id });
+        const rank = await db.rank.findOne({ _id });
         cb({
             name: socket.user._id,
             rank: rank.rank,

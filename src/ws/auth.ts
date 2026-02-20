@@ -1,4 +1,4 @@
-import { stateStore, User } from "#api/auth";
+import { stateStore } from "#api/auth";
 import { db } from "#db";
 import { GLSocket } from "@wxn0brp/gloves-link-server";
 import { wss } from "./wss";
@@ -25,12 +25,12 @@ namespace.onConnect(async (socket: GLSocket) => {
     socket.on("auth.request", async (authId) => {
         if (!authId || authId === "none") return google();
 
-        const user = await db.findOne<User>("users", { authId });
+        const user = await db.users.findOne({ authId });
         if (!user) return google();
 
         user.sessionToken = crypto.randomUUID();
         user.sessionExpiry = Date.now() + 24 * 3600 * 1000;
-        await db.updateOne("users", { _id: user._id }, user);
+        await db.users.updateOne({ _id: user._id }, user);
 
         socket.emit("auth.response", { _id: user._id, sessionToken: user.sessionToken });
     });
