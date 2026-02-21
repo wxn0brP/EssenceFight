@@ -6,8 +6,6 @@ import { games } from "#engine/games";
 import { startGame, startGames } from "#engine/startGames";
 import { matchSystem } from "#mmr";
 import { AnyCard } from "#shared/types/card";
-import { Deck } from "#shared/types/deck";
-import { Player } from "#shared/types/mmr";
 import { Evt_UserInfo } from "#shared/types/socket";
 import { GLSocket } from "@wxn0brp/gloves-link-server";
 import { AuthFnResult } from "@wxn0brp/gloves-link-server/types";
@@ -52,8 +50,6 @@ namespace.onConnect(async (socket: EFSocket) => {
 
         if (cardIds.length > 15) return cb("Max 15 cards allowed");
 
-        await db.deck.updateOneOrAdd({ _id }, { cards: cardIds });
-
         matchSystem.addPlayer(_id, cardIds);
         cb(true);
         startGames();
@@ -64,19 +60,6 @@ namespace.onConnect(async (socket: EFSocket) => {
         if (players) {
             await startGame(players[0], players[1]);
         }
-    });
-
-    socket.on("cards.list", async (cb: (data: Deck) => void) => {
-        const cards = await VQL.execute<AnyCard[]>("card card");
-        const deck = await db.deck.findOne({ _id });
-
-        if ("err" in cards)
-            return cb({ cards: [], savedDeck: [] });
-
-        cb({
-            cards,
-            savedDeck: deck?.cards || []
-        });
     });
 
     socket.on("disconnect", () => {

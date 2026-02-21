@@ -1,7 +1,7 @@
 import { loader } from "#loader";
 import { socket } from "#ws";
+import { fetchVQL, V } from "@wxn0brp/vql-client";
 import { AnyCard } from "_types/card";
-import { Deck } from "_types/deck";
 import { Evt_UserInfo } from "_types/socket";
 
 export const searchGameButton = qs<HTMLButtonElement>("#search-game");
@@ -62,23 +62,27 @@ function renderCard(card: AnyCard) {
     return el;
 }
 
-socket.emit("cards.list", (data: Deck) => {
+async function loadCards() {
+    loader.increment();
+    const cards = await V<AnyCard[]>`card card`;
+    const deck = await V<{ cards: string[] }>`client deck!`;
+    loader.decrement();
+
     cardGrid.innerHTML = "";
     selectedCards.clear();
 
-    let cards: AnyCard[] = data.cards;
-    let savedDeck: string[] = data.savedDeck;
-
     cards.forEach(card => {
         const el = renderCard(card);
-        if (savedDeck.includes(card._id)) {
+        if (deck && deck.cards.includes(card._id)) {
             selectedCards.add(card._id);
             el.classList.add("selected");
         }
         cardGrid.appendChild(el);
     });
     updateDeckStatus();
-});
+}
+
+loadCards();
 
 export function searchGame() {
     if (selectedCards.size === 0)
@@ -98,6 +102,19 @@ export function searchGame() {
             searchGameButton.innerHTML = "Search (err)";
             searchGameButton.disabled = false;
             if (typeof data === "string") alert(data);
+        }
+    });
+
+    fetchVQL({
+        db: "client",
+        d: {
+            updateOneOrAdd: {
+                collection: "deck",
+                search: {},
+                updater: {
+                    cards: deck
+                }
+            }
         }
     });
 }

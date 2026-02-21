@@ -8,21 +8,15 @@ import { VQL } from "#db";
 const app = new FalconFrame();
 FF_VQL(app, VQL);
 
-if (process.env.NODE_ENV === "development") {
-    app.use("/", (req, res, next) => {
-        if (req.socket.remoteAddress !== "127.0.0.1" && req.url === "/")
-            return res.send("Server is running");
-        next();
-    });
-    app.static("public");
-    app.static("front/dist");
-    app.static("front");
-} else {
-    app.get("/", () => "Server is running");
-}
+app.get("/", () => "Server is running");
 
 app.use("/auth/google", googleRouter);
 
 const server = app.l(18593);
+app.use("/gloves-link", (req, res, next) => {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    next();
+});
+
 wss.falconFrame(app, false);
 wss.attachToHttpServer(server);

@@ -29,9 +29,7 @@ if (tokenRes.err === true) {
     throw new Error(tokenRes.msg);
 }
 
-const socketUrl = localStorage.getItem("dev") === "true" ?
-    params.get("socket") || "/" :
-    await fetchApiJson("config/socket").then(res => res.url);
+const socketUrl = await fetchApiJson("config/socket").then(res => res.url);
 
 export const user = tokenRes.data;
 

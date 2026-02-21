@@ -1,9 +1,8 @@
-import { ValtheraCreate } from "@wxn0brp/db";
-import VQLProcessor from "@wxn0brp/vql";
-import { cardDB } from "./cards";
 import { User } from "#api/auth";
 import { Player } from "#shared/types/mmr";
-import { Deck } from "#shared/types/deck";
+import { ValtheraCreate } from "@wxn0brp/db";
+import VQLProcessor from "@wxn0brp/vql";
+import { cardDB } from "../shared/cards";
 
 export const db = ValtheraCreate<{
     users: User;
@@ -12,10 +11,6 @@ export const db = ValtheraCreate<{
         g: string;
     },
     rank: Player;
-    deck: {
-        cards: string[];
-        _id: string;
-    };
 }>("db");
 
 export const VQL = new VQLProcessor({
