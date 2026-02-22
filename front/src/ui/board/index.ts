@@ -52,7 +52,7 @@ export class BoardUi implements UiComponent {
 
         if (isAggressor && !wasAggressor) this.turnStartAnimation();
 
-        this.ui.name.innerHTML = gameState.data.users[this.index];
+        this.ui.name.innerHTML = gameState.data.usersMeta[this.index].name;
 
         if (previousEp && previousEp !== this.ui.ep.innerHTML) {
             this.ui.ep.classList.add("energy-pulse");

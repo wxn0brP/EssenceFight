@@ -1,11 +1,10 @@
 import { User } from "#api/auth";
-import { db, VQL } from "#db";
+import { db } from "#db";
 import { baseAttack } from "#engine/base/attack";
 import { putCard } from "#engine/base/putCard";
 import { games } from "#engine/games";
 import { startGame, startGames } from "#engine/startGames";
 import { matchSystem } from "#mmr";
-import { AnyCard } from "#shared/types/card";
 import { Evt_UserInfo } from "#shared/types/socket";
 import { GLSocket } from "@wxn0brp/gloves-link-server";
 import { AuthFnResult } from "@wxn0brp/gloves-link-server/types";
@@ -104,10 +103,17 @@ namespace.onConnect(async (socket: EFSocket) => {
 
     socket.on("user.info", async (cb: (user: Evt_UserInfo) => void) => {
         const rank = await db.rank.findOne({ _id });
+        const meta = await db.userMeta.findOne({ _id });
         cb({
-            name: socket.user._id,
+            name: meta.name,
             rank: rank.rank,
             lp: rank.lp
         });
+    });
+
+    socket.on("user.meta.name.set", async (name: string) => {
+        if (!name) return;
+        if (name.length > 32) return socket.emit("error", "Name too long");
+        await db.userMeta.updateOneOrAdd({ _id }, { name });
     });
 });

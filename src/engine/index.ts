@@ -1,4 +1,4 @@
-import { VQL } from "#db";
+import { db, VQL } from "#db";
 import { AnyCard, UnitCard_Leader } from "#shared/types/card";
 import { GameState, Id } from "#shared/types/state";
 import { wss } from "#ws/wss";
@@ -11,16 +11,16 @@ export class Engine {
 
     constructor(users: [Id, Id], public gameId: Id) {
         const aggressive = Math.random() > 0.5 ? 0 : 1;
+        this.socketRoom = wss.room("game-" + this.gameId);
 
         this.state = {
             boards: [getEmptyBoard(), getEmptyBoard()],
             aggressive,
             users,
+            usersMeta: [null, null],
             phase: 0,
             cards: {}
         }
-
-        this.socketRoom = wss.room("game-" + this.gameId);
     }
 
     triggerUserDisconnect(user: Id) {
@@ -79,6 +79,11 @@ export class Engine {
 
         processDeck(deck1Ids, 0);
         processDeck(deck2Ids, 1);
+
+        this.state.usersMeta = [
+            await db.userMeta.findOne({ _id: this.state.users[0] }),
+            await db.userMeta.findOne({ _id: this.state.users[1] })
+        ];
     }
 
     emit(type: string, ...args: any[]) {

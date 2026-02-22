@@ -104,6 +104,11 @@ googleRouter.get("/callback", async (req, res) => {
             gamesPlayed: 0
         });
 
+        await db.userMeta.add({
+            _id: dbUser._id,
+            name: dbUser._id
+        });
+
         authNamespace.userRoom(state).emit("auth.google.response", newUser._id);
     }
 
