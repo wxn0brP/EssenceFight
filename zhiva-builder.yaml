@@ -1,0 +1,31 @@
+build:
+    cmd: "cd front & bun run build"
+
+files:
+    - "cards"
+    - "front/dist"
+    - "public"
+    - "src"
+    - "LICENSE"
+    - "package.json"
+    - "SERVER.md"
+    - "zhiva.json"
+
+output:
+    name: "essence-fight"
+    dir: "./releases"
+
+define:
+    "ESSENCE_FIGHT_SERVER": "https://ef.wxn0.xyz/"
+
+linux:
+    format:
+        - "7z"
+
+win32:
+    format:
+        - "7z"
+
+darwin:
+    format:
+        - "7z"

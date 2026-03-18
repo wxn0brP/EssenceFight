@@ -8,6 +8,7 @@ bun.lock
 
 .env
 /db
+releases
 
 .zhiva-port
 identity.json
