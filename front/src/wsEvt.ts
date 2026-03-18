@@ -1,7 +1,7 @@
 import { loader } from "#loader";
+import { searchGame } from "#searchGame";
 import { boardsComp, gameState } from "#state";
 import { renderUnusedCards, resetUnusedCards } from "#ui/board/unused";
-import { searchGame, searchGameButton } from "#ui/main";
 import { showNotification } from "#ui/notifications";
 import { socket, user } from "#ws";
 import { CardPosition, GameState } from "_types/state";
@@ -10,8 +10,8 @@ socket.on("game.start", () => {
     qs("#view-main").style.display = "none";
     qs("#view-game").style.display = "";
     loader.decrement();
-    searchGameButton.innerHTML = "Search";
-    searchGameButton.disabled = false;
+    // searchGameButton.innerHTML = "Search";
+    // searchGameButton.disabled = false;
 });
 
 socket.on("game.win", (winner: number) => {
@@ -69,7 +69,7 @@ if (localStorage.getItem("dev") === "true") {
     socket.on("disconnect", () => {
         if (qs("#view-game").style.display === "none") return;
         setTimeout(() => {
-            searchGame();
+            searchGame("normal");
         }, 1000);
     });
 

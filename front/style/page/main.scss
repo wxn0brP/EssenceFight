@@ -1,0 +1,51 @@
+#page-main {
+    position: relative;
+
+    #pg_main__name {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        font-size: 2rem;
+    }
+
+    #pg_main__settings {
+        position: absolute;
+        bottom: 20px;
+        left: 10px;
+
+        border: 1px solid var(--accent);
+        padding: 1rem;
+        border-radius: 1rem;
+        background-color: var(--back);
+        color: var(--txt);
+        cursor: pointer;
+    }
+
+    #pg_main__buttons {
+        position: absolute;
+        bottom: 80px;
+        left: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        width: 300px;
+        text-align: center;
+
+        button {
+            border: 1px solid var(--accent);
+            padding: 1rem;
+            border-radius: 1rem;
+            background-color: var(--back);
+            color: var(--txt);
+            cursor: pointer;
+        }
+    }
+
+    #pg_main__meme {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -60%) rotateZ(-45deg);
+        font-size: 2rem;
+    }
+}

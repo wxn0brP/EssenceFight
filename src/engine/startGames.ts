@@ -39,6 +39,7 @@ async function _startGames() {
     const namespace = wss.of("/");
 
     for (const [p1Data, p2Data] of confirmed) {
+        console.log("match.start", p1Data.player._id, p2Data.player._id);
         await startGame(p1Data, p2Data);
     }
 

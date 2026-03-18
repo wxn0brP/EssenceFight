@@ -1,0 +1,50 @@
+@use "../card.scss" as *;
+
+#page-cards {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#deck-builder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 90%;
+    max-width: 1200px;
+    height: 100%;
+
+    h3 {
+        margin-bottom: 1rem;
+    }
+
+    .card-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 0.5rem;
+        width: 100%;
+        overflow-y: auto;
+        padding-bottom: 2rem;
+        // flex: 1;
+
+        .card {
+            @include cardStyle;
+
+            cursor: pointer;
+            user-select: none;
+
+            .card-art {
+                opacity: 0.2;
+            }
+
+            &.selected {
+                border-color: var(--accent);
+                box-shadow: 0 0 10px var(--accent);
+            }
+        }
+    }
+
+    #deck-count {
+        margin-bottom: 1rem;
+    }
+}

@@ -1,0 +1,13 @@
+#page-card-summon {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+
+    h1 {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -60%) rotateZ(-45deg);
+        font-size: 2rem;
+    }
+}

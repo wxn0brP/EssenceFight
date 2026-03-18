@@ -6,7 +6,7 @@
     "type": "module",
     "scripts": {
         "build:ts": "bun build src/init.ts --outdir dist --sourcemap",
-        "build:style": "bunx sass style:dist",
+        "build:style": "bunx sass style/style.scss dist/style.css",
         "build": "bun run build:ts && bun run build:style"
     },
     "devDependencies": {

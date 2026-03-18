@@ -1,7 +1,8 @@
-@import url("./animations.css");
-@import url("./board.css");
-@import url("./notif.css");
-@import url("./main.css");
+@use "./animations.scss";
+@use "./board.scss";
+@use "./notif.scss";
+@use "./main.scss";
+@use "./page/index.scss";
 
 * {
     margin: 0;

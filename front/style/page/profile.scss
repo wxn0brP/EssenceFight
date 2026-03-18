@@ -1,0 +1,37 @@
+#page-profile {
+    padding: 2rem;
+
+    #pg_profile__user {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+
+        #pg_profile__avatar {
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            background-color: var(--back);
+        }
+    }
+
+    #pg_profile__ep {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        height: 2rem;
+
+        #pg_profile__ep_bar {
+            width: 10rem;
+            height: 1rem;
+            border-radius: 0.5rem;
+            background-color: #000;
+
+            #pg_profile__ep_bar_fill {
+                width: var(--ep-percent, 0%);
+                height: 100%;
+                border-radius: 0.5rem;
+                background-color: var(--accent);
+            }
+        }
+    }
+}

@@ -43,7 +43,7 @@ namespace.onConnect(async (socket: EFSocket) => {
     const { _id } = socket.user;
     console.log("connected", _id);
 
-    socket.on("game.search", async (cardIds: string[], cb: (data: true | string) => void) => {
+    socket.on("game.search", async (cardIds: string[], type: "normal" | "ranked", cb: (data: true | string) => void) => {
         if (socket.gameId) return cb("You are already in a match");
         if (matchSystem._players.has(_id)) return cb("You are already in a match");
 
