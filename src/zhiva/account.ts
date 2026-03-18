@@ -36,7 +36,7 @@ export async function authenticate() {
             const url = new URL(urlPath, serverUrl).toString();
 
             const os = process.platform;
-            if (os === "win32") spawn(["start", url]);
+            if (os === "win32") spawn(["cmd.exe", "/c", "start", "", url]);
             else if (os === "darwin") spawn(["open", url]);
             else spawn(["xdg-open", url]);
         });
