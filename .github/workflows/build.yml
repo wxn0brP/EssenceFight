@@ -37,6 +37,7 @@ jobs:
           git config --global user.name "github-actions[bot]"
 
           git checkout --orphan dist
+          git reset -q HEAD --
           rm .gitignore
 
           git add cards
