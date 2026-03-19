@@ -1,0 +1,51 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - master
+
+  workflow_dispatch:
+
+concurrency:
+  group: build-master
+  cancel-in-progress: true
+
+jobs:
+  build-server:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Bun Setup
+        uses: oven-sh/setup-bun@v2
+
+      - name: Build
+        working-directory: .
+        run: |
+          shopt -s extglob
+          bun install
+          cd front
+          bun install
+          bun run build
+
+      - name: Deploy to Target Branch
+        run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+
+          git checkout --orphan dist
+          git add cards
+          git add front/dist
+          git add public
+          git add src
+
+          git add LICENSE
+          git add package.json
+          git add SERVER.md
+          git add zhiva.json
+
+          git commit -m "Deploy"
+          git push origin dist --force
