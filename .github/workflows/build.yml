@@ -12,7 +12,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build-server:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -37,6 +37,8 @@ jobs:
           git config --global user.name "github-actions[bot]"
 
           git checkout --orphan dist
+          rm .gitignore
+
           git add cards
           git add front/dist
           git add public
