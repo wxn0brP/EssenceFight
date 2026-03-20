@@ -9,6 +9,7 @@ files:
     - "LICENSE"
     - "package.json"
     - "SERVER.md"
+    - "tsconfig.json"
     - "zhiva.json"
 
 output:
@@ -16,7 +17,6 @@ output:
     dir: "./releases"
 
 define:
-    "ESSENCE_FIGHT_SERVER": "https://ef.wxn0.xyz/"
 
 linux:
     format:

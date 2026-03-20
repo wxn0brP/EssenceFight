@@ -48,6 +48,7 @@ jobs:
           git add LICENSE
           git add package.json
           git add SERVER.md
+          git add tsconfig.json
           git add zhiva.json
 
           git commit -m "Deploy"
