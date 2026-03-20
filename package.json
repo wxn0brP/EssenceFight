@@ -19,7 +19,7 @@
         "typescript": "*"
     },
     "dependencies": {
-        "@wxn0brp/db": "^0.90.0",
+        "@wxn0brp/db": "^0.100.0",
         "@wxn0brp/falcon-frame": "^0.7.0",
         "@wxn0brp/gloves-link-client": "^0.1.0",
         "@wxn0brp/gloves-link-server": "0.1.0",
