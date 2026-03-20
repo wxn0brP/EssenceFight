@@ -38,10 +38,9 @@ jobs:
 
           git checkout --orphan dist
           git reset -q HEAD --
-          rm .gitignore
 
           git add cards
-          git add front/dist
+          git add -f front/dist
           git add public
           git add src
 
@@ -50,6 +49,7 @@ jobs:
           git add SERVER.md
           git add tsconfig.json
           git add zhiva.json
+          git add .gitignore
 
           git commit -m "Deploy"
           git push origin dist --force
