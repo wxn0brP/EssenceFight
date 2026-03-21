@@ -4,6 +4,7 @@ import { UiComponent } from "@wxn0brp/flanker-ui";
 import { UnitCard } from "_types/card";
 import { BoardState, CardPosition } from "_types/state";
 import { unusedCards } from "./unused";
+import { allCardMap } from "#cards";
 
 export class BoardUi implements UiComponent {
     ui: {
@@ -95,7 +96,7 @@ export class BoardUi implements UiComponent {
         const boardState = this.getBoardState();
         const splitPos = pos.split("-");
         const cardId = boardState.cards[splitPos[0]][+splitPos[1]];
-        const data = gameState.data.cards[cardId] as UnitCard;
+        const data = allCardMap[cardId] as UnitCard;
 
         if (!data) {
             div.innerHTML = "Empty";
@@ -237,6 +238,9 @@ export class BoardUi implements UiComponent {
                     this.element.classList.remove("active");
                     return;
                 }
+
+                if (!gameState.data.phase)
+                    return console.error("Not in attack phase");
 
                 this.element.querySelectorAll(".selected").forEach(c => c.classList.remove("selected"));
                 card.classList.add("selected");

@@ -1,7 +1,9 @@
+import { allCardMap } from "#engine/cards";
 import { checkWin } from "#engine/utils/checkWin";
 import { UnitCard } from "#shared/types/card";
 import { CardPosition } from "#shared/types/state";
 import { EFSocket } from "#ws/game";
+import { emitWarning } from "process";
 import { getBaseData } from "../utils/baseData";
 import { getBoards } from "../utils/board";
 import { parseCardPosition } from "../utils/cardPosition";
@@ -16,8 +18,11 @@ export function baseAttack(
 ) {
     const { engine, playerId } = getBaseData(socket);
 
+    if (!engine.state.phase)
+        return socket400(socket, logPrefix, "01", "not in attack phase");
+
     if (playerId !== engine.state.users[engine.state.aggressive])
-        return socket400(socket, logPrefix, "01", "your turn");
+        return socket400(socket, logPrefix, "02", "not your turn");
 
     const { aggressiveBoard, defensiveBoard } = getBoards(engine.state);
 
@@ -42,8 +47,8 @@ export function baseAttack(
     if (!aggressiveCardId)
         return socket400(socket, logPrefix, "21", "Card not found");
 
-    const aggressiveCard = engine.state.cards[aggressiveCardId] as UnitCard;
-    const defensiveCard = engine.state.cards[defensiveCardId] as UnitCard;
+    const aggressiveCard = allCardMap[aggressiveCardId] as UnitCard;
+    const defensiveCard = allCardMap[defensiveCardId] as UnitCard;
     const defensiveState = defensiveBoard.cards.state[defensiveCardPositionData];
 
     defensiveState.hp -=

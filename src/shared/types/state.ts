@@ -1,10 +1,9 @@
-import {
-    AnyCard
-} from "./card";
 import { UserMeta } from "./meta";
 
 export type Id = string;
 export type CardPosition = string;
+
+export type GameType = "normal" | "ranked";
 
 export interface CardState {
     hp: number;
@@ -29,5 +28,6 @@ export interface GameState {
     users: [Id, Id];
     usersMeta: [UserMeta, UserMeta];
     phase: 0 | 1;
-    cards: Record<Id, AnyCard>;
+    phaseMeta: Id[];
+    turn: number;
 }

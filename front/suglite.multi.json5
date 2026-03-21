@@ -4,5 +4,11 @@
         watch: [
             "style"
         ]
+    },
+    {
+        cmd: "tsc --noEmit",
+        watch: [
+            "src"
+        ]
     }
 ]

@@ -16,15 +16,15 @@
     },
     "devDependencies": {
         "@types/bun": "*",
+        "@wxn0brp/zhiva-base-lib": "github:wxn0brP/Zhiva-base-lib",
         "typescript": "*"
     },
     "dependencies": {
-        "@wxn0brp/db": "^0.90.0",
-        "@wxn0brp/falcon-frame": "^0.7.0",
-        "@wxn0brp/gloves-link-client": "^0.1.0",
+        "@wxn0brp/db": "^0.100.0",
+        "@wxn0brp/falcon-frame": "^0.8.0",
+        "@wxn0brp/gloves-link-client": "^0.1.1",
         "@wxn0brp/gloves-link-server": "0.1.0",
-        "@wxn0brp/vql": "^0.11.2",
-        "@wxn0brp/vql-client": "^0.2.9",
-        "@wxn0brp/zhiva-base-lib": "github:wxn0brP/Zhiva-base-lib"
+        "@wxn0brp/vql": "^0.11.4",
+        "@wxn0brp/vql-client": "^0.2.9"
     }
 }

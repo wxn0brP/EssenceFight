@@ -1,12 +1,17 @@
 import { ConfirmedMatchPlayer, MatchProposal, PendingMatch, PlayerId } from "#shared/types/mmr";
 import { RankPlayersC } from "./vars";
 
+export interface MatchConfig {
+    matchRange: number;
+    consentThreshold: number;
+    mmrFactor: number;
+}
+
 export class MatchmakingQueue {
     _players: Map<string, ConfirmedMatchPlayer & { timestamp: number }> = new Map();
     _pendingProposals: Map<string, PendingMatch> = new Map();
 
-    MMR_MATCH_RANGE = 40;
-    MMR_CONSENT_THRESHOLD = 200;
+    constructor(public config: MatchConfig) { }
 
     async addPlayer(id: PlayerId, deck: string[]) {
         const player = await RankPlayersC.findOne({ _id: id });
@@ -42,7 +47,7 @@ export class MatchmakingQueue {
 
                 const diff = Math.abs(availablePlayers[i].player.mmr - availablePlayers[j].player.mmr);
 
-                if (diff <= this.MMR_MATCH_RANGE) {
+                if (diff <= this.config.matchRange) {
                     confirmed.push([
                         { player: availablePlayers[i].player, deck: availablePlayers[i].deck },
                         { player: availablePlayers[j].player, deck: availablePlayers[j].deck }
@@ -50,7 +55,7 @@ export class MatchmakingQueue {
                     used.add(availablePlayers[i].player._id);
                     used.add(availablePlayers[j].player._id);
                     break;
-                } else if (diff <= this.MMR_CONSENT_THRESHOLD) {
+                } else if (diff <= this.config.consentThreshold) {
                     const stronger = availablePlayers[i].player.mmr > availablePlayers[j].player.mmr ?
                         availablePlayers[i] : availablePlayers[j];
                     const weaker = availablePlayers[i].player.mmr > availablePlayers[j].player.mmr ?

@@ -1,3 +1,4 @@
+import { allCardMap } from "#engine/cards";
 import { getBaseData } from "#engine/utils/baseData";
 import { getBoards } from "#engine/utils/board";
 import { parseCardPosition } from "#engine/utils/cardPosition";
@@ -28,7 +29,7 @@ export async function putCard(socket: EFSocket, cardId: Id, positionData: CardPo
     if (aggressiveBoard.cards[position][index])
         return socket400(socket, logPrefix, "04", "Fobidden move");
 
-    const cardData = engine.state.cards[cardId];
+    const cardData = allCardMap[cardId];
     if (!cardData || cardData.type !== "unit")
         return socket400(socket, logPrefix, "05", "Fobidden card (not unit)");
 
@@ -38,7 +39,7 @@ export async function putCard(socket: EFSocket, cardId: Id, positionData: CardPo
     aggressiveBoard.deploymentPoints--;
 
     aggressiveBoard.cards.state[positionData] = {
-        hp: (engine.state.cards[cardId] as UnitCard).health
+        hp: (allCardMap[cardId] as UnitCard).health
     }
 
     engine.emitChanges();

@@ -1,5 +1,6 @@
 import { Engine } from "#engine";
 import { games } from "#engine/games";
+import { matchSystems } from "#mmr";
 import { resolveMatch } from "#mmr/calc";
 import { BoardState } from "#shared/types/state";
 import { EFSocket } from "#ws/game";
@@ -24,7 +25,11 @@ export function checkWin(engine: Engine) {
     });
     room.leaveAll();
 
-    resolveMatch(engine.state.users[winner], engine.state.users[winner ^ 1]);
+    resolveMatch(
+        engine.state.users[winner],
+        engine.state.users[winner ^ 1],
+        matchSystems[engine.gameType].config.mmrFactor
+    );
 
     games.delete(gameId);
     return true;

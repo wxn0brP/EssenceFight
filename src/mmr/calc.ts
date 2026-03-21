@@ -3,7 +3,8 @@ import { RankPlayersC } from "./vars";
 
 export async function resolveMatch(
     winnerId: string,
-    loserId: string
+    loserId: string,
+    factor: number
 ) {
     const winner = await RankPlayersC.findOne({ _id: winnerId });
     const loser = await RankPlayersC.findOne({ _id: loserId });
@@ -12,26 +13,28 @@ export async function resolveMatch(
         throw new Error("Player not found");
     }
 
-    const winnerMMRChange = calculateMMRChange(
-        winner.mmr,
-        loser.mmr,
-        true
-    );
+    if (factor > 0) {
+        const winnerMMRChange = calculateMMRChange(
+            winner.mmr,
+            loser.mmr,
+            true
+        );
 
-    const loserMMRChange = calculateMMRChange(
-        loser.mmr,
-        winner.mmr,
-        false
-    );
+        const loserMMRChange = calculateMMRChange(
+            loser.mmr,
+            winner.mmr,
+            false
+        );
 
-    winner.mmr += winnerMMRChange;
-    loser.mmr += loserMMRChange;
+        winner.mmr += winnerMMRChange;
+        loser.mmr += loserMMRChange;
 
-    winner.lp += lpChange(winner.mmr, loser.mmr, true);
-    loser.lp += lpChange(loser.mmr, winner.mmr, false);
+        winner.lp += lpChange(winner.mmr, loser.mmr, true) * factor;
+        loser.lp += lpChange(loser.mmr, winner.mmr, false) * factor;
 
-    if (winner.lp >= 100) promote(winner);
-    if (loser.lp < 0) demote(loser);
+        if (winner.lp >= 100) promote(winner);
+        if (loser.lp < 0) demote(loser);
+    }
 
     winner.gamesPlayed += 1;
     loser.gamesPlayed += 1;

@@ -1,15 +1,16 @@
-import { db, VQL } from "#db";
+import { db } from "#db";
 import { AnyCard, UnitCard_Leader } from "#shared/types/card";
-import { GameState, Id } from "#shared/types/state";
+import { GameState, GameType, Id } from "#shared/types/state";
 import { wss } from "#ws/wss";
 import { Room } from "@wxn0brp/gloves-link-server/room";
+import { allCardMap, allCardsArray } from "./cards";
 import { getEmptyBoard } from "./empty";
 
 export class Engine {
     public state: GameState;
     public socketRoom: Room;
 
-    constructor(users: [Id, Id], public gameId: Id) {
+    constructor(users: [Id, Id], public gameId: Id, public gameType: GameType) {
         const aggressive = Math.random() > 0.5 ? 0 : 1;
         this.socketRoom = wss.room("game-" + this.gameId);
 
@@ -19,7 +20,8 @@ export class Engine {
             users,
             usersMeta: [null, null],
             phase: 0,
-            cards: {}
+            phaseMeta: [],
+            turn: 0,
         }
     }
 
@@ -28,17 +30,12 @@ export class Engine {
     }
 
     async load(deck1Ids: string[] = [], deck2Ids: string[] = []) {
-        const cards = await VQL.execute<AnyCard[]>("card card");
-        if ("err" in cards) return console.error(cards);
-
         this.state.aggressive = 0;
-        this.state.boards[0].deploymentPoints = 20;
-        this.state.boards[1].deploymentPoints = 20;
-
-        this.state.cards = Object.fromEntries(cards.map(card => [card._id, card]));
+        this.state.boards[0].deploymentPoints = 1;
+        this.state.boards[1].deploymentPoints = 1;
 
         const processDeck = (deckIds: string[], boardIndex: number) => {
-            const deckCards = deckIds.map(id => this.state.cards[id]).filter(Boolean);
+            const deckCards = deckIds.map(id => allCardMap[id]).filter(Boolean);
 
             const leaderFn = (card: AnyCard) =>
                 card.type === "unit" &&
@@ -49,8 +46,8 @@ export class Engine {
             let others = deckCards.filter(c => c !== leader);
 
             if (deckCards.length === 0 || !leader) {
-                const allLeaders = cards.filter(leaderFn) as UnitCard_Leader[];
-                const allOthers = cards.filter(c => !leaderFn(c));
+                const allLeaders = allCardsArray.filter(leaderFn) as UnitCard_Leader[];
+                const allOthers = allCardsArray.filter(c => !leaderFn(c));
 
                 if (!leader)
                     leader = allLeaders[Math.floor(Math.random() * allLeaders.length)];

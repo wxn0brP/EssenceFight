@@ -1,8 +1,10 @@
+import { allCardMap, waitToLoadCards } from "#cards";
 import { loader } from "#loader";
 import { searchGame } from "#searchGame";
 import { boardsComp, gameState } from "#state";
-import { renderUnusedCards, resetUnusedCards } from "#ui/board/unused";
+import { renderUnusedCards } from "#ui/board/unused";
 import { showNotification } from "#ui/notifications";
+import { setSearchButtonsDisabled } from "#ui/pages/buttons";
 import { socket, user } from "#ws";
 import { CardPosition, GameState } from "_types/state";
 
@@ -10,8 +12,7 @@ socket.on("game.start", () => {
     qs("#view-main").style.display = "none";
     qs("#view-game").style.display = "";
     loader.decrement();
-    // searchGameButton.innerHTML = "Search";
-    // searchGameButton.disabled = false;
+    setSearchButtonsDisabled(false);
 });
 
 socket.on("game.win", (winner: number) => {
@@ -45,24 +46,25 @@ socket.on("game.attack", (attackerIndex: number, aPos: CardPosition, dPos: CardP
     }
 });
 
-socket.on("game.start", (startState: "new" | "join", state: GameState) => {
+socket.on("game.start", async (startState: "new" | "join", state: GameState) => {
     console.log("start", startState, state);
     gameState.data = state;
     (window as any).state = gameState.data;
 
     gameState.myBoardIndex = Number(user._id === state.users[1]);
 
+    await waitToLoadCards();
     boardsComp[0].init(gameState.myBoardIndex ^ 1);
     boardsComp[1].init(gameState.myBoardIndex);
-    resetUnusedCards();
-    renderUnusedCards(state.boards[gameState.myBoardIndex].cards.unused.map(id => state.cards[id]));
 });
 
-socket.on("game.state", (state: GameState) => {
+socket.on("game.state", async (state: GameState) => {
+    await waitToLoadCards();
     Object.assign(gameState.data, state);
     boardsComp[0].render();
     boardsComp[1].render();
-    renderUnusedCards(state.boards[gameState.myBoardIndex].cards.unused.map(id => state.cards[id]));
+    renderUnusedCards(state.boards[gameState.myBoardIndex].cards.unused.map(id => allCardMap[id]));
+    qs(`#game-controls-buttons`).qs("next-phase-count", 1).innerHTML = state.phaseMeta.length.toString();
 });
 
 if (localStorage.getItem("dev") === "true") {
