@@ -8,8 +8,8 @@ export const matchSystems: Record<GameType, MatchmakingQueue> = {
         mmrFactor: 1,
     }),
     normal: new MatchmakingQueue({
-        matchRange: 40,
-        consentThreshold: 200,
+        matchRange: 80,
+        consentThreshold: 400,
         mmrFactor: 0,
     }),
 }
