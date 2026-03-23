@@ -1,10 +1,10 @@
 import { db } from "#db";
-import { AnyCard, UnitCard_Leader } from "#shared/types/card";
 import { GameState, GameType, Id } from "#shared/types/state";
 import { wss } from "#ws/wss";
 import { Room } from "@wxn0brp/gloves-link-server/room";
 import { allCardMap, allCardsArray } from "./cards";
 import { getEmptyBoard } from "./empty";
+import { AnyCard, UnitCard_Leader } from "#shared/types/card/sub";
 
 export class Engine {
     public state: GameState;

@@ -15,8 +15,22 @@ attack:
 armor:
   physical: 0
   arts: 1
-effect:
-  - cost: 1
-    description: Gain status resistance. Your next attack ignores Arts resist and deals ADmg
-  - cost: 2
-    description: Heals unit closer to him for 1hp. Give him status resistance and gain status resistance
+effects:
+  - _id: wondering_old_man_resistance
+    name: Status Resistance
+    trigger: ability
+    cost: 1
+    effect:
+      type: status
+      value: "status resistance"
+      target: self
+    description: Gain status resistance. Your next attack ignores Arts resist and deals A Dmg.
+  - _id: wondering_old_man_heal
+    name: Healing
+    trigger: ability
+    cost: 2
+    effect:
+      type: heal
+      value: "1"
+      target: ally
+    description: Heals unit closer to him for 1hp. Give him status resistance and gain status resistance.

@@ -1,9 +1,8 @@
 import { allCardMap } from "#engine/cards";
 import { checkWin } from "#engine/utils/checkWin";
-import { UnitCard } from "#shared/types/card";
+import { UnitCard } from "#shared/types/card/card";
 import { CardPosition } from "#shared/types/state";
 import { EFSocket } from "#ws/game";
-import { emitWarning } from "process";
 import { getBaseData } from "../utils/baseData";
 import { getBoards } from "../utils/board";
 import { parseCardPosition } from "../utils/cardPosition";

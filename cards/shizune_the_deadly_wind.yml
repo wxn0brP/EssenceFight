@@ -15,13 +15,26 @@ attack:
 armor:
   physical: 1
   arts: 1
-effect:
-  - cost: 3
-    description: "Fast as a wind (spell)(3Ep) - choose ally unit to hit one enemy. If enemy died, recover 1Ep. If enemy is stil alive after hit, he counter hits."
+effects:
+  - _id: shizune_fast_as_wind
+    name: Fast as a wind
+    trigger: ability
+    cost: 3
+    effect:
+      type: damage
+      value: "variable"
+      target: choose
+    description: Choose ally unit to hit one enemy. If enemy died, recover 1EP. If enemy is still alive after hit, he counter hits.
 potencial:
-  requirements: you hit enemy 16 times
-  unleashed: (+2/+3)(dmg/HP) - when your team attacks, give them my passive effect, but they don't hit second time. Instead, if at least one enemy died, you can once again perform attack phase this round.
-description: |
-  Round start:
-  Gain fast as a wind
-  Everytime i fight, i hit enemy first. If he dies, i hit second target for 50% of my dmg
+  requirements: You hit enemy 16 times.
+  effects:
+    - _id: shizune_potencial_buff
+      name: Wind Empowerment
+      trigger: passive
+      cost: 0
+      effect:
+        type: buff
+        value: "+2/+3 (dmg/HP)"
+        target: ally
+      description: When your team attacks, give them my passive effect. If at least one enemy died, you can once again perform attack phase this round.
+description: Round start - Gain fast as a wind. Everytime I fight, I hit enemy first. If he dies, I hit second target for 50% of my dmg.

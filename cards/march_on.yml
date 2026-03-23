@@ -6,4 +6,13 @@ frameLvl: 1
 nature: "None"
 cost: 3
 castingType: slow
-effect: Give +1/+1 to every unit in your front line.
+effects:
+  - _id: march_on_buff
+    name: March On Buff
+    trigger: ability
+    cost: 0
+    effect:
+      type: buff
+      value: "+1/+1"
+      target: ally
+    description: Give +1/+1 to every unit in your front line.

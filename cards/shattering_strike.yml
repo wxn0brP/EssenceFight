@@ -6,4 +6,13 @@ frameLvl: 1
 nature: Lightning
 cost: 4
 castingType: fast
-effect: Deal 3ADmg to enemy in front line. If he has arts resist, stun him for 1 round.
+effects:
+  - _id: shattering_strike_damage
+    name: Shattering Damage
+    trigger: ability
+    cost: 0
+    effect:
+      type: damage
+      value: "3A"
+      target: enemy
+    description: Deal 3A Dmg to enemy in front line. If he has arts resist, stun him for 1 round.

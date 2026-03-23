@@ -6,4 +6,13 @@ frameLvl: 2
 nature: "None"
 cost: 1
 castingType: instant
-effect: Deal 1PDmg to enemy. After use, i go back to the hand. Can't be used on the same target three times in the round.
+effects:
+  - _id: gunblade_damage
+    name: Gunblade Strike
+    trigger: ability
+    cost: 0
+    effect:
+      type: damage
+      value: "1P"
+      target: enemy
+    description: Deal 1P Dmg to enemy. After use, it goes back to the hand. Can't be used on the same target three times in the round.

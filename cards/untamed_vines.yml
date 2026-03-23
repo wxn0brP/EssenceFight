@@ -6,4 +6,14 @@ frameLvl: 1
 nature: Flora
 cost: 1
 castingType: instant
-effect: Root enemy for 1 round.
+effects:
+  - _id: untamed_vines_root
+    name: Root
+    trigger: ability
+    cost: 0
+    effect:
+      type: status
+      value: "rooted"
+      target: enemy
+      duration: 1
+    description: Root enemy for 1 round.

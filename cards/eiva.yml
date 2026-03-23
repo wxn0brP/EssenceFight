@@ -15,9 +15,13 @@ attack:
 armor:
   physical: 0
   arts: 0
-effect:
-  - cost: 0
-    description: |
-      Can choose between 2 attack types:
-      long-distance shoot dealing +2TDmg, if enemy is caster or sniper
-      close attack dealing +2TDmg to target if he's tank. If he dies, deal 1TDmg to every enemy surrounding him
+effects:
+  - _id: eiva_attack_choice
+    name: Attack Choice
+    trigger: attack
+    cost: 0
+    effect:
+      type: damage
+      value: "+2T"
+      target: enemy
+    description: "Can choose between 2 attack types: long-distance shoot dealing +2T Dmg if enemy is caster or sniper; close attack dealing +2T Dmg to target if he's tank. If he dies, deal 1T Dmg to every enemy surrounding him."

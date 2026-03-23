@@ -6,4 +6,13 @@ frameLvl: 2
 nature: Fire
 cost: 7
 castingType: slow
-effect: Deal 1ADmg +1ADmg for every enemy unit deployed to all enemies except leader.
+effects:
+  - _id: avalanche_of_fire_effect_1
+    name: Avalanche Damage
+    trigger: ability
+    cost: 0
+    effect:
+      type: damage
+      value: "1A + 1A per enemy unit"
+      target: enemy
+    description: Deal 1A Dmg +1A Dmg for every enemy unit deployed to all enemies except leader.

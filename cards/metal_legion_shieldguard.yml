@@ -15,7 +15,13 @@ attack:
 armor:
   physical: 4
   arts: 3
-effect:
-  - cost: 0
-    description: First scratch
-description: When hitted by enemy for the first time, deal dmg to him equal to my armor + arts resist - dmg enemy dealt to me. After that, armor +3 and arts resist +4.
+effects:
+  - _id: metal_legion_first_scratch
+    name: First scratch
+    trigger: defend
+    cost: 0
+    effect:
+      type: damage
+      value: "armor + arts resist - dmg taken"
+      target: enemy
+    description: When hit by enemy for the first time, deal dmg to him equal to my armor + arts resist - dmg enemy dealt to me. After that, gain +3 Armor and +4 Arts Resist.

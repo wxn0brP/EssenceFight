@@ -15,6 +15,13 @@ attack:
 armor:
   physical: 1
   arts: 0
-effect:
-  - cost: 1
-    description: Gain +1Armor.
+effects:
+  - _id: arcids_heavyguard_effect_1
+    name: Armor Boost
+    trigger: ability
+    cost: 1
+    effect:
+      type: buff
+      value: "+1 Armor"
+      target: self
+    description: Gain +1 Armor.

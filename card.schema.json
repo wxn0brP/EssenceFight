@@ -1,0 +1,367 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://essencefight.cards/card.schema.json",
+  "title": "Card Definition Schema",
+  "description": "JSON Schema for validating card YAML definitions",
+  "definitions": {
+    "CardBase": {
+      "type": "object",
+      "properties": {
+        "_id": {
+          "type": "string",
+          "pattern": "^[a-z0-9_]+$"
+        },
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "unit",
+            "spell",
+            "rune"
+          ]
+        },
+        "region": {
+          "type": "string"
+        },
+        "frameLvl": {
+          "type": "integer"
+        },
+        "nature": {
+          "type": "string",
+          "enum": [
+            "Fire",
+            "Water",
+            "Earth",
+            "Lightning",
+            "Flora",
+            "Wind",
+            "Darkness",
+            "None",
+            "-"
+          ]
+        },
+        "description": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "_id",
+        "name",
+        "type",
+        "region",
+        "frameLvl",
+        "nature"
+      ]
+    },
+    "EffectPreset": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "buff",
+            "debuff",
+            "damage",
+            "heal",
+            "summon",
+            "transform",
+            "status"
+          ]
+        },
+        "value": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "number"
+            }
+          ]
+        },
+        "target": {
+          "type": "string",
+          "enum": [
+            "self",
+            "ally",
+            "enemy",
+            "ground",
+            "all",
+            "choose"
+          ]
+        },
+        "duration": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "condition": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "value"
+      ]
+    },
+    "EffectCustom": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "const": "custom"
+        },
+        "script": {
+          "type": "string"
+        },
+        "params": {
+          "type": "object"
+        }
+      },
+      "required": [
+        "type",
+        "script"
+      ]
+    },
+    "Effect": {
+      "type": "object",
+      "properties": {
+        "_id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "effect": {
+          "oneOf": [
+            {
+              "$ref": "#/definitions/EffectPreset"
+            },
+            {
+              "$ref": "#/definitions/EffectCustom"
+            }
+          ]
+        },
+        "trigger": {
+          "type": "string",
+          "enum": [
+            "attack",
+            "deploy",
+            "defend",
+            "death",
+            "kill",
+            "round_start",
+            "round_end",
+            "passive",
+            "ability"
+          ]
+        },
+        "cost": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "EP cost (Energy Points)"
+        },
+        "costDP": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "DP cost (Deployment Points) - rare, optional"
+        },
+        "description": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "_id",
+        "name",
+        "effect",
+        "trigger"
+      ]
+    },
+    "UnitCardPotencial": {
+      "type": "object",
+      "properties": {
+        "requirements": {
+          "type": "string"
+        },
+        "effects": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Effect"
+          }
+        },
+        "description": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "requirements",
+        "effects"
+      ]
+    },
+    "UnitCard": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/CardBase"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "unit"
+            },
+            "class": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "Sniper",
+                  "Fighter",
+                  "Evoker",
+                  "Tank",
+                  "Leader",
+                  "Assasin",
+                  "Caster"
+                ]
+              },
+              "minItems": 1
+            },
+            "health": {
+              "type": "integer"
+            },
+            "cost": {
+              "type": "integer"
+            },
+            "attack": {
+              "type": "object",
+              "properties": {
+                "physical": {
+                  "type": "integer"
+                },
+                "arts": {
+                  "type": "integer"
+                },
+                "true": {
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "physical",
+                "arts",
+                "true"
+              ]
+            },
+            "armor": {
+              "type": "object",
+              "properties": {
+                "physical": {
+                  "type": "integer"
+                },
+                "arts": {
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "physical",
+                "arts"
+              ]
+            },
+            "effects": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Effect"
+              }
+            },
+            "potencial": {
+              "$ref": "#/definitions/UnitCardPotencial"
+            }
+          },
+          "required": [
+            "class",
+            "health",
+            "cost",
+            "attack",
+            "armor"
+          ]
+        }
+      ]
+    },
+    "SpellCard": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/CardBase"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "spell"
+            },
+            "cost": {
+              "type": "integer"
+            },
+            "castingType": {
+              "type": "string",
+              "enum": [
+                "slow",
+                "fast",
+                "instant"
+              ]
+            },
+            "effects": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Effect"
+              },
+              "minItems": 1
+            }
+          },
+          "required": [
+            "cost",
+            "castingType",
+            "effects"
+          ]
+        }
+      ]
+    },
+    "RuneCard": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/CardBase"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "type": {
+              "const": "rune"
+            },
+            "cost": {
+              "type": "integer"
+            },
+            "effects": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Effect"
+              },
+              "minItems": 1
+            }
+          },
+          "required": [
+            "cost",
+            "effects"
+          ]
+        }
+      ]
+    }
+  },
+  "oneOf": [
+    {
+      "$ref": "#/definitions/UnitCard"
+    },
+    {
+      "$ref": "#/definitions/SpellCard"
+    },
+    {
+      "$ref": "#/definitions/RuneCard"
+    }
+  ]
+}

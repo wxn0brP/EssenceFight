@@ -3,7 +3,7 @@ import { getBaseData } from "#engine/utils/baseData";
 import { getBoards } from "#engine/utils/board";
 import { parseCardPosition } from "#engine/utils/cardPosition";
 import { socket400 } from "#engine/utils/err";
-import { UnitCard } from "#shared/types/card";
+import { UnitCard } from "#shared/types/card/card";
 import { CardPosition } from "#shared/types/state";
 import { EFSocket } from "#ws/game";
 import { Id } from "@wxn0brp/db";
