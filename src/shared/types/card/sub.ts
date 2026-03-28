@@ -59,9 +59,3 @@ export type EffectPreset = CardEffect.Preset
 export type EffectCustom = CardEffect.Custom
 export type EffectTrigger = CardEffect.Trigger
 export type EffectTarget = CardEffect.Target
-
-/**
- * Cost convention:
- * - `cost` - EP cost (Energy Points) - activated abilities
- * - `costDP` - DP cost (Deployment Points) - summon/deploy costs (rare, optional)
- */

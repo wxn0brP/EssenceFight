@@ -4,13 +4,26 @@ import { searchGame } from "#searchGame";
 import { boardsComp, gameState } from "#state";
 import { renderUnusedCards } from "#ui/board/unused";
 import { showNotification } from "#ui/notifications";
-import { setSearchButtonsDisabled } from "#ui/pages/buttons";
+import { infoContainer, setSearchButtonsDisabled } from "#ui/pages/buttons";
 import { socket, user } from "#ws";
 import { CardPosition, GameState } from "_types/state";
+
+socket.on("error", (...args) => {
+    console.error("error", ...args);
+});
+
+socket.on("error.valid", (...args: any[]) => {
+    console.error("error.valid", ...args);
+});
+
+socket.on("error.spam", (...args: any[]) => {
+    console.error("error.spam", ...args);
+});
 
 socket.on("game.start", () => {
     qs("#view-main").style.display = "none";
     qs("#view-game").style.display = "";
+    infoContainer.search.style.display = "none";
     loader.decrement();
     setSearchButtonsDisabled(false);
 });

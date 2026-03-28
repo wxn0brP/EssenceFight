@@ -1,4 +1,4 @@
-import { AnyCard } from "_types/card";
+import { AnyCard } from "_types/card/sub";
 
 export const unusedCards = qs("#unused-cards-container");
 export const unusedCardsOverlay = qs("#unused-cards-overlay");

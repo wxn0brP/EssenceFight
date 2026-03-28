@@ -1,6 +1,6 @@
 import { loader } from "#loader";
 import { V } from "@wxn0brp/vql-client";
-import { AnyCard } from "_types/card";
+import { AnyCard } from "_types/card/sub";
 
 const cardGrid = qs("#available-cards");
 const deckCount = qs<HTMLSpanElement>("#deck-count");

@@ -1,7 +1,7 @@
 import { gameState } from "#state";
 import { socket } from "#ws";
 import { UiComponent } from "@wxn0brp/flanker-ui";
-import { UnitCard } from "_types/card";
+import { UnitCard } from "_types/card/card";
 import { BoardState, CardPosition } from "_types/state";
 import { unusedCards } from "./unused";
 import { allCardMap } from "#cards";

@@ -1,5 +1,5 @@
 import { V } from "@wxn0brp/vql-client";
-import { AnyCard } from "_types/card";
+import { AnyCard } from "_types/card/sub";
 
 export const allCardMap: Record<string, AnyCard> = {};
 let loadPromise: Promise<void> | null = null;

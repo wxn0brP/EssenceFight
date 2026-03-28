@@ -1,19 +1,18 @@
 {
-    "name": "front",
-    "version": "0.0.1",
-    "main": "dist/index.js",
-    "author": "wxn0brP",
-    "type": "module",
-    "scripts": {
-        "build:ts": "bun build src/init.ts --outdir dist --sourcemap",
-        "build:style": "bunx sass style/style.scss dist/style.css",
-        "build": "bun run build:ts && bun run build:style"
-    },
-    "devDependencies": {
-        "sass": "^1.97.3",
-        "typescript": "*"
-    },
-    "dependencies": {
-        "@wxn0brp/flanker-ui": "^0.5.1"
-    }
+	"name": "front",
+	"version": "0.0.1",
+	"main": "dist/index.js",
+	"author": "wxn0brP",
+	"type": "module",
+	"scripts": {
+		"build:ts": "bun build src/init.ts --outdir dist --sourcemap",
+		"build:style": "bunx sass style/style.scss dist/style.css",
+		"build": "bun run build:ts && bun run build:style"
+	},
+	"devDependencies": {
+		"sass": "^1.97.3"
+	},
+	"dependencies": {
+		"@wxn0brp/flanker-ui": "^0.5.1"
+	}
 }

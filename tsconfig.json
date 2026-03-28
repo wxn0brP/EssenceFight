@@ -11,7 +11,13 @@
 		"esModuleInterop": true,
 		"skipLibCheck": true,
 		"outDir": "./dist",
-		"declaration": true
+		"declaration": true,
+		"noEmit": true,
+		"rootDir": "./src",
+		"strict": false,
+		"types": [
+			"bun-types"
+		]
 	},
 	"include": [
 		"./src"
