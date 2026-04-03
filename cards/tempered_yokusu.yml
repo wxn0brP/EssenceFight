@@ -20,9 +20,10 @@ effects:
     name: Deployment Boost
     trigger: deploy
     cost: 0
-    effect:
-      type: buff
-      value: "+1/+1"
-      target: self
-      condition: "if your aggressor"
+    operations:
+      - op: resolve_target
+        target: self
+
+      - op: apply_buff
+        value: "+1/+1"
     description: When deployed, if your aggressor, I gain +1/+1.

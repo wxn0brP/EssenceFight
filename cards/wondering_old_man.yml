@@ -20,17 +20,50 @@ effects:
     name: Status Resistance
     trigger: ability
     cost: 1
-    effect:
-      type: status
-      value: "status resistance"
-      target: self
+    operations:
+      - op: check_cost
+        resource: EP
+        amount: 1
+
+      - op: resolve_target
+        target: self
+
+      - op: apply_status
+        status: status_resistance
+
+      - op: pay_cost
+        resource: EP
+        amount: 1
     description: Gain status resistance. Your next attack ignores Arts resist and deals A Dmg.
+
   - _id: wondering_old_man_heal
     name: Healing
     trigger: ability
     cost: 2
-    effect:
-      type: heal
-      value: "1"
-      target: ally
+    operations:
+      - op: check_cost
+        resource: EP
+        amount: 2
+
+      - op: resolve_target
+        target: ally
+        selector: lowest_hp
+
+      - op: apply_heal
+        amount: 1
+
+      - op: apply_status
+        status: status_resistance
+
+      - op: resolve_target
+        target: self
+        assign: selfTarget
+
+      - op: apply_status
+        targets: self
+        status: status_resistance
+
+      - op: pay_cost
+        resource: EP
+        amount: 2
     description: Heals unit closer to him for 1hp. Give him status resistance and gain status resistance.

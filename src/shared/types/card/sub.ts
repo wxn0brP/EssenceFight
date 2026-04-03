@@ -54,8 +54,7 @@ export type AnyCard =
     | SpellCard
     | RuneCard
 
-export type AnyEffect = CardEffect.Effect
-export type EffectPreset = CardEffect.Preset
-export type EffectCustom = CardEffect.Custom
-export type EffectTrigger = CardEffect.Trigger
-export type EffectTarget = CardEffect.Target
+export type AnyEffect = CardEffect.Effect;
+export type EffectOperation = CardEffect.Operation;
+export type EffectTrigger = CardEffect.Trigger;
+export type EffectTarget = CardEffect.Target;

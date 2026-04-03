@@ -20,20 +20,46 @@ effects:
     name: Void sphere
     trigger: ability
     cost: 2
-    effect:
-      type: damage
-      value: "1T"
-      target: enemy
+    operations:
+      - op: check_cost
+        resource: EP
+        amount: 2
+
+      - op: resolve_target
+        target: enemy
+
+      - op: parse_damage
+        value: "1T"
+
+      - op: apply_damage
+
+      - op: pay_cost
+        resource: EP
+        amount: 2
     description: Use it on chosen enemy to deal 1T Dmg. If he dies, instead drain 1HP from him.
+
   - _id: draken_silent_voice
     name: Silent Voice of Void
     trigger: ability
     cost: 4
-    effect:
-      type: damage
-      value: "1T"
-      target: enemy
+    operations:
+      - op: check_cost
+        resource: EP
+        amount: 4
+
+      - op: resolve_target
+        target: enemy
+
+      - op: parse_damage
+        value: "1T"
+
+      - op: apply_damage
+
+      - op: pay_cost
+        resource: EP
+        amount: 4
     description: Use it on chosen enemy to deal 1T Dmg and put bleeding on him for 2 rounds. Bleeding dmg increases by +1 every round.
+
 potencial:
   requirements: Score 5 takedowns and use Void sphere (spell) at least one time.
   effects:
@@ -41,9 +67,11 @@ potencial:
       name: Void Empowerment
       trigger: passive
       cost: 0
-      effect:
-        type: heal
-        value: "1"
-        target: self
+      operations:
+        - op: resolve_target
+          target: self
+
+        - op: apply_heal
+          amount: 1
       description: Heal 1. Instead of Void sphere, you get Silent Voice of Void (spell). If takes part in takedown, heal 1HP. If killed with Silent Voice of Void, instead heal for killed enemy HP.
   description: Round Start - You get Void sphere (spell) in your hand.

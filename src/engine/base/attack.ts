@@ -1,50 +1,52 @@
 import { allCardMap } from "#engine/cards";
+import { BoardState } from "#engine/utils/board";
 import { checkWin } from "#engine/utils/checkWin";
 import { UnitCard } from "#shared/types/card/card";
 import { CardPosition } from "#shared/types/state";
 import { EFSocket } from "#ws/game";
+import { Socket_StandardRes } from "@wxn0brp/gls-limit/types";
 import { getBaseData } from "../utils/baseData";
-import { getBoards } from "../utils/board";
 import { parseCardPosition } from "../utils/cardPosition";
-import { socket400 } from "../utils/err";
+import { SocketRes } from "@wxn0brp/gls-limit/res";
 
-const logPrefix = "ATTACK-BASE";
-
-export function baseAttack(
+export async function game_attack_base(
     socket: EFSocket,
     aggressiveCardPositionData: CardPosition,
     defensiveCardPositionData: CardPosition
-) {
+): Promise<Socket_StandardRes> {
     const { engine, playerId } = getBaseData(socket);
+    const res = new SocketRes("game.attack.base");
+    if (!engine)
+        return res.err("00", "Game not found");
 
     if (!engine.state.phase)
-        return socket400(socket, logPrefix, "01", "not in attack phase");
+        return res.err("01", "not in attack phase");
 
     if (playerId !== engine.state.users[engine.state.aggressive])
-        return socket400(socket, logPrefix, "02", "not your turn");
+        return res.err("02", "not your turn");
 
-    const { aggressiveBoard, defensiveBoard } = getBoards(engine.state);
+    const { aggressiveBoard, defensiveBoard } = BoardState.byRole(engine.state);
 
     const aggressiveCardPosition = parseCardPosition(aggressiveCardPositionData);
     const defensiveCardPosition = parseCardPosition(defensiveCardPositionData);
 
     if (defensiveCardPosition[0] === "ground" && !defensiveBoard.cards.ground.some(Boolean))
-        return socket400(socket, logPrefix, "10", "Fobidden attack");
+        return res.err("10", "Fobidden attack");
 
     if (defensiveCardPosition[0] === "castle" && defensiveBoard.cards.ground.some(Boolean))
-        return socket400(socket, logPrefix, "11", "Fobidden attack");
+        return res.err("11", "Fobidden attack");
 
     if (defensiveCardPosition[0] === "runes")
-        return socket400(socket, logPrefix, "12", "Fobidden attack");
+        return res.err("12", "Fobidden attack");
 
     const defensiveCardId: string = defensiveBoard.cards[defensiveCardPosition[0]]?.[defensiveCardPosition[1]];
     const aggressiveCardId: string = aggressiveBoard.cards[aggressiveCardPosition[0]]?.[aggressiveCardPosition[1]];
 
     if (!defensiveCardId)
-        return socket400(socket, logPrefix, "20", "Card not found");
+        return res.err("20", "Card not found");
 
     if (!aggressiveCardId)
-        return socket400(socket, logPrefix, "21", "Card not found");
+        return res.err("21", "Card not found");
 
     const aggressiveCard = allCardMap[aggressiveCardId] as UnitCard;
     const defensiveCard = allCardMap[defensiveCardId] as UnitCard;

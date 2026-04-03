@@ -11,9 +11,11 @@ effects:
     name: Root
     trigger: ability
     cost: 0
-    effect:
-      type: status
-      value: "rooted"
-      target: enemy
-      duration: 1
+    operations:
+      - op: resolve_target
+        target: enemy
+
+      - op: apply_status
+        status: rooted
+        duration: 1
     description: Root enemy for 1 round.

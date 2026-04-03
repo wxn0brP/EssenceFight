@@ -20,8 +20,13 @@ effects:
     name: First scratch
     trigger: defend
     cost: 0
-    effect:
-      type: damage
-      value: "armor + arts resist - dmg taken"
-      target: enemy
+    operations:
+      - op: resolve_target
+        target: enemy
+
+      - op: parse_damage
+        # value: "armor + arts resist - dmg taken"
+        value: "3A"
+
+      - op: apply_damage
     description: When hit by enemy for the first time, deal dmg to him equal to my armor + arts resist - dmg enemy dealt to me. After that, gain +3 Armor and +4 Arts Resist.

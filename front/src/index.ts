@@ -1,5 +1,7 @@
 import { boards, boardsComp } from "#state";
 import "#ui/board/buttons";
+import { setupTargetingEvents } from "#ui/board/targeting";
+import { setupUnusedCardsEvents } from "#ui/board/unused";
 import { getUserInfo as page_getUserInfo } from "#ui/main";
 import { switchPage } from "#ui/pages";
 import { loadCards as page_loadCards } from "#ui/pages/cards";
@@ -12,6 +14,8 @@ const rows = boards[0].qs(".rows").children;
 rows[0].parentNode.insertBefore(rows[1], rows[0]);
 
 boardsComp[1].events();
+setupUnusedCardsEvents();
+setupTargetingEvents();
 switchPage("main");
 page_getUserInfo();
 page_loadCards();

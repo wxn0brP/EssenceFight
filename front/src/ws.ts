@@ -1,3 +1,4 @@
+import { mgl } from "#mgl";
 import GlovesLinkClient from "@wxn0brp/gloves-link-client";
 import { fetchApiJson } from "@wxn0brp/zhiva-base-lib/front/api";
 
@@ -39,4 +40,4 @@ export const socket = new GlovesLinkClient(socketUrl, {
     reConnectInterval: 3000,
 });
 
-(window as any).mgl_socket = socket;
+mgl.socket = socket;

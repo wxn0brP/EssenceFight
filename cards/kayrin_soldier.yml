@@ -20,8 +20,18 @@ effects:
     name: Damage Boost
     trigger: ability
     cost: 1
-    effect:
-      type: buff
-      value: "+1A"
-      target: self
+    operations:
+      - op: check_cost
+        resource: EP
+        amount: 1
+
+      - op: resolve_target
+        target: self
+
+      - op: apply_buff
+        value: "1A"
+
+      - op: pay_cost
+        resource: EP
+        amount: 1
     description: Increase dmg of your next attack to +1A Dmg.

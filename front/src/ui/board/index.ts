@@ -1,10 +1,12 @@
+import { allCardMap } from "#cards";
 import { gameState } from "#state";
 import { socket } from "#ws";
 import { UiComponent } from "@wxn0brp/flanker-ui";
 import { UnitCard } from "_types/card/card";
+import { CardEffect } from "_types/card/effect";
 import { BoardState, CardPosition } from "_types/state";
+import { getTargetingState, isTargeting, useEffectOnTarget } from "./targeting";
 import { unusedCards } from "./unused";
-import { allCardMap } from "#cards";
 
 export class BoardUi implements UiComponent {
     ui: {
@@ -125,6 +127,7 @@ export class BoardUi implements UiComponent {
     <div class="card-footer">
         <span class="card-stat">HP: <strong class="card-hp">${state.hp}</strong></span>
     </div>
+    ${this.renderEffects(data, cardId, pos)}
 </div>
 `;
 
@@ -156,6 +159,23 @@ export class BoardUi implements UiComponent {
             e.preventDefault();
             alert(JSON.stringify(Object.assign({}, { state }, { data }), null, 2));
         }
+    }
+
+    renderEffects(data: UnitCard, cardId: string, pos: CardPosition): string {
+        const abilityEffects = (data.effects || []).filter(
+            (effect: CardEffect.Effect) => effect.trigger === "ability"
+        );
+
+        if (abilityEffects.length === 0) return "";
+
+        const buttons = abilityEffects.map((effect: CardEffect.Effect) => {
+            // TODO get effect cost
+            const costText = "";
+            const title = `${effect.name}${costText}\n${effect.description || ""}`;
+            return `<button class="effect-btn" data-card-id="${cardId}" data-card-pos="${pos}" data-effect-id="${effect._id}" title="${title.replace(/"/g, "&quot;")}">${effect.name}${costText}</button>`;
+        }).join("");
+
+        return `<div class="card-effects">${buttons}</div>`;
     }
 
     animateAttack(attackerCard: HTMLDivElement, defenderCard: HTMLDivElement) {
@@ -210,10 +230,25 @@ export class BoardUi implements UiComponent {
         });
 
         this.element.addEventListener("click", (e) => {
+            const target = e.target as HTMLElement;
+
+            // Handle effect button clicks
+            const effectBtn = target.closest(".effect-btn") as HTMLButtonElement;
+            if (effectBtn) {
+                e.stopPropagation();
+                if (this.index !== gameState.data.aggressive) return console.error("Not your turn");
+
+                const cardId = effectBtn.getAttribute("data-card-id");
+                const cardPos = effectBtn.getAttribute("data-card-pos");
+                const effectId = effectBtn.getAttribute("data-effect-id");
+
+                socket.emit("game.effect.use", `board:${cardPos}`, effectId, "");
+                return;
+            }
+
             if (this.index !== gameState.data.aggressive)
                 return console.error("Not your turn");
 
-            const target = e.target as HTMLDivElement;
             const card = target.closest("article") as HTMLDivElement;
             if (!card) return;
 
@@ -255,6 +290,15 @@ export class BoardUi implements UiComponent {
             const card = target.closest("article") as HTMLDivElement;
             if (!card) return;
 
+            if (isTargeting()) {
+                const targetingState = getTargetingState();
+                if (targetingState.targetType === "enemy" && !card.classList.contains("empty")) {
+                    const targetPos = card.getAttribute("data-id");
+                    useEffectOnTarget(targetPos);
+                    return;
+                }
+            }
+
             if (selectedAttack) {
                 if (this.index !== gameState.data.aggressive)
                     return console.error("Not your turn");
@@ -273,6 +317,21 @@ export class BoardUi implements UiComponent {
                 }, 400);
                 return;
             }
+        });
+
+        this.element.addEventListener("click", (e) => {
+            if (!isTargeting()) return;
+
+            const targetingState = getTargetingState();
+            if (targetingState.targetType !== "ally") return;
+
+            const target = e.target as HTMLDivElement;
+            const card = target.closest("article") as HTMLDivElement;
+            if (!card || card.classList.contains("empty")) return;
+
+            e.stopPropagation();
+            const targetPos = card.getAttribute("data-id");
+            useEffectOnTarget(targetPos);
         });
     }
 

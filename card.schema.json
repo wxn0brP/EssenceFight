@@ -123,6 +123,91 @@
         "script"
       ]
     },
+    "Operation": {
+      "type": "object",
+      "properties": {
+        "op": {
+          "type": "string",
+          "enum": [
+            "check_cost",
+            "pay_cost",
+            "resolve_target",
+            "parse_damage",
+            "apply_damage",
+            "apply_heal",
+            "apply_buff",
+            "apply_status",
+            "create_card",
+            "find_empty_slot",
+            "check_condition",
+            "emit",
+            "log",
+            "return_to_hand"
+          ]
+        },
+        "resource": {
+          "type": "string",
+          "enum": ["EP", "DP"]
+        },
+        "amount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "target": {
+          "type": "string",
+          "enum": ["self", "ally", "enemy", "ground", "all", "choose"]
+        },
+        "selector": {
+          "type": "string"
+        },
+        "assign": {
+          "type": "string"
+        },
+        "value": {
+          "oneOf": [
+            { "type": "string" },
+            { "type": "number" }
+          ]
+        },
+        "targets": {
+          "oneOf": [
+            { "type": "string" },
+            { "type": "array" }
+          ]
+        },
+        "damage": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "cardId": {
+          "type": "string"
+        },
+        "position": {
+          "type": "string"
+        },
+        "zone": {
+          "type": "string"
+        },
+        "condition": {
+          "type": "string"
+        },
+        "event": {
+          "type": "string"
+        },
+        "data": {
+          "type": "object"
+        },
+        "message": {
+          "type": "string"
+        },
+        "card": {
+          "type": "string"
+        }
+      },
+      "required": ["op"]
+    },
     "Effect": {
       "type": "object",
       "properties": {
@@ -141,6 +226,12 @@
               "$ref": "#/definitions/EffectCustom"
             }
           ]
+        },
+        "operations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Operation"
+          }
         },
         "trigger": {
           "type": "string",
@@ -173,8 +264,11 @@
       "required": [
         "_id",
         "name",
-        "effect",
         "trigger"
+      ],
+      "oneOf": [
+        { "required": ["effect"] },
+        { "required": ["operations"] }
       ]
     },
     "UnitCardPotencial": {

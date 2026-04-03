@@ -43,7 +43,7 @@ export class Engine {
                 card.class.includes("Leader");
 
             let leader: UnitCard_Leader | undefined = deckCards.find(leaderFn) as UnitCard_Leader;
-            let others = deckCards.filter(c => c !== leader);
+            let others = deckCards.filter(c => !leaderFn(c));
 
             if (deckCards.length === 0 || !leader) {
                 const allLeaders = allCardsArray.filter(leaderFn) as UnitCard_Leader[];

@@ -87,8 +87,4 @@ if (localStorage.getItem("dev") === "true") {
             searchGame("normal");
         }, 1000);
     });
-
-    socket.on("error.valid", (msg: string) => {
-        console.error(msg);
-    });
 }

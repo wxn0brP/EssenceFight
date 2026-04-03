@@ -11,8 +11,13 @@ effects:
     name: Gunblade Strike
     trigger: ability
     cost: 0
-    effect:
-      type: damage
-      value: "1P"
-      target: enemy
+    operations:
+      - op: resolve_target
+        target: enemy
+
+      - op: parse_damage
+        value: "1P"
+
+      - op: apply_damage
+
     description: Deal 1P Dmg to enemy. After use, it goes back to the hand. Can't be used on the same target three times in the round.

@@ -1,37 +1,39 @@
 import { allCardMap } from "#engine/cards";
 import { getBaseData } from "#engine/utils/baseData";
-import { getBoards } from "#engine/utils/board";
-import { parseCardPosition } from "#engine/utils/cardPosition";
-import { socket400 } from "#engine/utils/err";
+import { BoardState } from "#engine/utils/board";
+import { parseCardPosition } from "#engine/utils/cardPosition";;
 import { UnitCard } from "#shared/types/card/card";
 import { CardPosition } from "#shared/types/state";
 import { EFSocket } from "#ws/game";
 import { Id } from "@wxn0brp/db";
+import { SocketRes } from "@wxn0brp/gls-limit/res";
+import { Socket_StandardRes } from "@wxn0brp/gls-limit/types";
 
-const logPrefix = `CARD-PUT`;
-
-export async function putCard(socket: EFSocket, cardId: Id, positionData: CardPosition) {
+export async function game_card_put(socket: EFSocket, cardId: Id, positionData: CardPosition): Promise<Socket_StandardRes> {
+    const res = new SocketRes("game.card.put");
     const { engine, playerId } = getBaseData(socket);
+    if (!engine)
+        return res.err("00", "Game not found");
 
     if (playerId !== engine.state.users[engine.state.aggressive])
-        return socket400(socket, logPrefix, "01", "your turn");
+        return res.err("01", "your turn");
 
-    const { aggressiveBoard } = getBoards(engine.state);
+    const { aggressiveBoard } = BoardState.byRole(engine.state);
 
     if (aggressiveBoard.deploymentPoints <= 0)
-        return socket400(socket, logPrefix, "02", "No deployment points");
+        return res.err("02", "No deployment points");
 
     const unusedIndex = aggressiveBoard.cards.unused.findIndex(card => card === cardId);
     if (unusedIndex === -1)
-        return socket400(socket, logPrefix, "03", "Card not found");
+        return res.err("03", "Card not found");
 
     const [position, index] = parseCardPosition(positionData);
     if (aggressiveBoard.cards[position][index])
-        return socket400(socket, logPrefix, "04", "Fobidden move");
+        return res.err("04", "Fobidden move");
 
     const cardData = allCardMap[cardId];
     if (!cardData || cardData.type !== "unit")
-        return socket400(socket, logPrefix, "05", "Fobidden card (not unit)");
+        return res.err("05", "Fobidden card (not unit)");
 
     aggressiveBoard.cards.unused.splice(unusedIndex, 1);
 
@@ -43,4 +45,6 @@ export async function putCard(socket: EFSocket, cardId: Id, positionData: CardPo
     }
 
     engine.emitChanges();
+
+    return res.data();
 }

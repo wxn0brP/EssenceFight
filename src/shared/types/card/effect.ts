@@ -28,27 +28,48 @@ export namespace CardEffect {
         | "all"
         | "choose"
 
-    export interface Preset {
-        type: Exclude<Type, "custom">;
-        value: string | number;
-        target?: Target;
-        duration?: number;
-        condition?: string;
-    }
+    export type OperationType =
+        | "check_cost"
+        | "pay_cost"
+        | "resolve_target"
+        | "parse_damage"
+        | "apply_damage"
+        | "apply_heal"
+        | "apply_buff"
+        | "apply_status"
+        | "create_card"
+        | "find_empty_slot"
+        | "check_condition"
+        | "emit"
+        | "log"
+        | "return_to_hand"
 
-    export interface Custom {
-        type: "custom";
-        script: string;
-        params?: Record<string, any>;
+    export interface Operation {
+        op: OperationType;
+        resource?: "EP" | "DP";
+        amount?: number;
+        target?: Target;
+        selector?: string;
+        assign?: string;
+        value?: string;
+        targets?: string | any[];
+        damage?: string;
+        status?: string;
+        cardId?: string;
+        position?: string;
+        zone?: string;
+        condition?: string;
+        event?: string;
+        data?: Record<string, any>;
+        message?: string;
+        card?: string;
     }
 
     export interface Effect {
         _id: string;
         name: string;
-        effect: Preset | Custom;
+        operations?: Operation[];
         trigger: Trigger;
-        cost?: number;
-        costDP?: number;
         description?: string;
     }
 }

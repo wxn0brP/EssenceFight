@@ -1,6 +1,7 @@
 import { db } from "#db";
-import { baseAttack } from "#engine/base/attack";
-import { putCard } from "#engine/base/putCard";
+import { game_attack_base } from "#engine/base/attack";
+import { game_card_put } from "#engine/base/putCard";
+import { game_effect_use } from "#engine/base/useEffect";
 import { games } from "#engine/games";
 import { checkIsUserInMatch, startGame, startGames } from "#engine/startGames";
 import { matchSystems } from "#mmr";
@@ -15,6 +16,7 @@ export const gameEvents: Events[] = [
     ["game.turn.end", 1000, false, game_turn_end],
     ["game.phase.next", 1000, false, game_phase_next],
     ["game.attack.base", 1000, false, game_attack_base],
+    ["game.effect.use", 1000, true, game_effect_use],
 ];
 
 export const userEvents: Events[] = [
@@ -86,12 +88,6 @@ async function disconnect(socket: EFSocket): Promise<Socket_StandardRes> {
     return res.data();
 }
 
-async function game_card_put(socket: EFSocket, cardId: string, position: string): Promise<Socket_StandardRes> {
-    const res = new SocketRes("game.card.put");
-    putCard(socket, cardId, position);
-    return res.data();
-}
-
 async function game_turn_end(socket: EFSocket): Promise<Socket_StandardRes> {
     const res = new SocketRes("game.turn.end");
     const game = games.get(socket.gameId);
@@ -123,12 +119,6 @@ async function game_phase_next(socket: EFSocket): Promise<Socket_StandardRes> {
         game.state.phase = 1;
 
     game.emitChanges();
-    return res.data();
-}
-
-async function game_attack_base(socket: EFSocket, aCardPos: string, dCardPos: string): Promise<Socket_StandardRes> {
-    const res = new SocketRes("game.attack.base");
-    baseAttack(socket, aCardPos, dCardPos);
     return res.data();
 }
 

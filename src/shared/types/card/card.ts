@@ -43,6 +43,7 @@ export interface SpellCard extends Card {
     cost: number;
     castingType: CardPipe.CastingType;
     effects: CardEffect.Effect[];
+    targetScope?: "enemy" | "ally" | "self" | "ground" | "all" | "choose";
 }
 
 export interface RuneCard extends Card {

@@ -20,8 +20,12 @@ effects:
     name: Attack Choice
     trigger: attack
     cost: 0
-    effect:
-      type: damage
-      value: "+2T"
-      target: enemy
+    operations:
+      - op: resolve_target
+        target: enemy
+
+      - op: parse_damage
+        value: "2T"
+
+      - op: apply_damage
     description: "Can choose between 2 attack types: long-distance shoot dealing +2T Dmg if enemy is caster or sniper; close attack dealing +2T Dmg to target if he's tank. If he dies, deal 1T Dmg to every enemy surrounding him."
