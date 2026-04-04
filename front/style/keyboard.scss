@@ -1,0 +1,127 @@
+#keyboard-feedback {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.85);
+    color: #0f0;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 14px;
+    z-index: 10000;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+#keyboard-buffer {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.85);
+    color: #0f0;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 18px;
+    z-index: 10000;
+    pointer-events: none;
+    min-width: 100px;
+    text-align: center;
+    letter-spacing: 2px;
+    opacity: 0;
+    transition: opacity 0.2s;
+
+    &.visible {
+        opacity: 1;
+    }
+}
+
+#keyboard-help {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.95);
+    color: #eee;
+    padding: 24px 32px;
+    border-radius: 8px;
+    font-family: monospace;
+    font-size: 14px;
+    z-index: 999;
+    width: 1000px;
+    line-height: 1.8;
+    border: 1px solid #444;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+
+    &.visible {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    h2 {
+        margin: 0 0 12px 0;
+        color: #0f0;
+        text-align: center;
+    }
+
+    .hint {
+        color: #888;
+        margin: 0 0 8px 0;
+        font-size: 12px;
+
+        kbd {
+            color: #0f0;
+        }
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+
+        tr td:first-child {
+            color: #0f0;
+            padding: 2px 8px;
+            white-space: nowrap;
+        }
+
+        td:last-child {
+            color: #eee;
+        }
+    }
+
+    .zones {
+        color: #888;
+        margin: 12px 0 0 0;
+        font-size: 12px;
+
+        kbd {
+            color: #ccc;
+        }
+    }
+
+    .examples {
+        color: #888;
+        margin: 4px 0 0 0;
+        font-size: 12px;
+
+        span {
+            color: #ccc;
+        }
+    }
+
+    .close-hint {
+        color: #666;
+        margin: 12px 0 0 0;
+        font-size: 11px;
+        text-align: center;
+
+        kbd {
+            color: #0f0;
+        }
+    }
+}
