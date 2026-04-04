@@ -36,8 +36,14 @@ export async function game_attack_base(
     if (defensiveCardPosition[0] === "castle" && defensiveBoard.cards.ground.some(Boolean))
         return res.err("11", "Fobidden attack");
 
+    if (defensiveCardPosition[0] === "castle" && defensiveCardPosition[1] === 1 && (defensiveBoard.cards.castle[0] || defensiveBoard.cards.castle[2]))
+        return res.err("14", "Fobidden attack");
+
     if (defensiveCardPosition[0] === "runes")
         return res.err("12", "Fobidden attack");
+
+    if (aggressiveCardPosition[0] === "runes")
+        return res.err("13", "Runes cannot attack");
 
     const defensiveCardId: string = defensiveBoard.cards[defensiveCardPosition[0]]?.[defensiveCardPosition[1]];
     const aggressiveCardId: string = aggressiveBoard.cards[aggressiveCardPosition[0]]?.[aggressiveCardPosition[1]];

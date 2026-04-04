@@ -32,8 +32,16 @@ export async function game_card_put(socket: EFSocket, cardId: Id, positionData: 
         return res.err("04", "Fobidden move");
 
     const cardData = allCardMap[cardId];
-    if (!cardData || cardData.type !== "unit")
-        return res.err("05", "Fobidden card (not unit)");
+    if (!cardData)
+        return res.err("05", "Unknown card");
+
+    const isRunesSlot = position === "runes";
+
+    if (isRunesSlot && cardData.type !== "rune")
+        return res.err("06", "Only rune cards can be placed on runes slots");
+
+    if (!isRunesSlot && cardData.type !== "unit")
+        return res.err("07", "Fobidden card (not unit)");
 
     aggressiveBoard.cards.unused.splice(unusedIndex, 1);
 

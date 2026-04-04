@@ -259,6 +259,15 @@ export class BoardUi implements UiComponent {
                 const cardId = activeUnusedCard.getAttribute("data-card-id");
                 const cardPosition = card.getAttribute("data-id");
 
+                const cardData = allCardMap[cardId];
+                const isRunesSlot = cardPosition.startsWith("runes-");
+
+                if (isRunesSlot && cardData?.type !== "rune")
+                    return console.error("Only rune cards can be placed on runes slots");
+
+                if (!isRunesSlot && cardData?.type !== "unit")
+                    return console.error("Only unit cards can be placed on non-runes slots");
+
                 activeUnusedCard.classList.remove("active");
                 activeUnusedCard = null;
                 this.element.classList.remove("active");
@@ -267,6 +276,12 @@ export class BoardUi implements UiComponent {
             }
 
             if (!card.classList.contains("empty")) {
+                const cardPos = card.getAttribute("data-id");
+                const cardData = allCardMap[card.getAttribute("data-card-id")];
+
+                if (cardPos?.startsWith("runes-"))
+                    return console.error("Runes cannot attack");
+
                 if (selectedAttack === card) {
                     card.classList.remove("selected");
                     selectedAttack = null;
@@ -305,6 +320,13 @@ export class BoardUi implements UiComponent {
 
                 const aggressiveCardPos = selectedAttack.getAttribute("data-id");
                 const defensiveCardPos = card.getAttribute("data-id");
+
+                if (defensiveCardPos?.startsWith("runes-"))
+                    return console.error("Runes cannot be attacked");
+
+                const defensiveBoard = gameState.data.boards[1 - this.index];
+                if (defensiveCardPos === "castle-1" && (defensiveBoard.cards.castle[0] || defensiveBoard.cards.castle[2]))
+                    return console.error("Cannot attack leader while guard is present");
 
                 this.animateAttack(selectedAttack, card);
 
