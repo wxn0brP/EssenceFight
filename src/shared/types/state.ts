@@ -9,6 +9,11 @@ export interface CardState {
     hp: number;
 }
 
+export interface ActionRecord {
+    attacked: boolean;
+    effects: Id[];
+}
+
 export interface BoardState {
     essencePoints: number;
     deploymentPoints: number;
@@ -20,6 +25,8 @@ export interface BoardState {
         unused: Id[];
         state: Record<string, CardState>;
     }
+
+    actionHistory: Record<string, ActionRecord>;
 }
 
 export interface GameState {

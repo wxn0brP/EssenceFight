@@ -1,13 +1,14 @@
 import { allCardMap } from "#engine/cards";
 import { BoardState } from "#engine/utils/board";
 import { checkWin } from "#engine/utils/checkWin";
+import { markAttackUsed } from "#engine/utils/mark";
 import { UnitCard } from "#shared/types/card/card";
 import { CardPosition } from "#shared/types/state";
 import { EFSocket } from "#ws/game";
+import { SocketRes } from "@wxn0brp/gls-limit/res";
 import { Socket_StandardRes } from "@wxn0brp/gls-limit/types";
 import { getBaseData } from "../utils/baseData";
 import { parseCardPosition } from "../utils/cardPosition";
-import { SocketRes } from "@wxn0brp/gls-limit/res";
 
 export async function game_attack_base(
     socket: EFSocket,
@@ -53,6 +54,13 @@ export async function game_attack_base(
 
     if (!aggressiveCardId)
         return res.err("21", "Card not found");
+
+    const userIndex = playerId === engine.state.users[0] ? 0 : 1;
+
+    if (aggressiveBoard.actionHistory[aggressiveCardPositionData]?.attacked)
+        return res.err("22", "Card already attacked");
+
+    markAttackUsed(engine.state, userIndex, aggressiveCardPositionData);
 
     const aggressiveCard = allCardMap[aggressiveCardId] as UnitCard;
     const defensiveCard = allCardMap[defensiveCardId] as UnitCard;

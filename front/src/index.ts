@@ -1,11 +1,12 @@
+import { setupKeyboardEvents } from "#keyboard";
 import { boards, boardsComp } from "#state";
 import "#ui/board/buttons";
 import { setupTargetingEvents } from "#ui/board/targeting";
 import { setupUnusedCardsEvents } from "#ui/board/unused";
-import { setupKeyboardEvents } from "#keyboard";
 import { getUserInfo as page_getUserInfo } from "#ui/main";
 import { switchPage } from "#ui/pages";
 import { loadCards as page_loadCards } from "#ui/pages/cards";
+import "./bot";
 import "./wsEvt";
 
 boards[0].id = "board_opponent";

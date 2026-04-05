@@ -3,8 +3,7 @@
 	watch: [
 		"src"
 	],
-	restart_cmd: "clear",
-	events: {
-		rs: "clear"
+	cmds: {
+		oc: "xdg-open http://localhost:38983/?token=$1"
 	}
 }

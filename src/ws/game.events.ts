@@ -3,6 +3,7 @@ import { game_attack_base } from "#engine/base/attack";
 import { game_card_put } from "#engine/base/putCard";
 import { game_effect_use } from "#engine/base/useEffect";
 import { games } from "#engine/games";
+import { getPossibleMoves } from "#engine/moves";
 import { checkIsUserInMatch, startGame, startGames } from "#engine/startGames";
 import { matchSystems } from "#mmr";
 import { GameType } from "#shared/types/state";
@@ -17,6 +18,7 @@ export const gameEvents: Events[] = [
     ["game.phase.next", 1000, false, game_phase_next],
     ["game.attack.base", 1000, false, game_attack_base],
     ["game.effect.use", 1000, true, game_effect_use],
+    ["game.moves", 1000, true, game_moves]
 ];
 
 export const userEvents: Events[] = [
@@ -94,7 +96,8 @@ async function game_turn_end(socket: EFSocket): Promise<Socket_StandardRes> {
     if (!game) return res.err("Game not found");
 
     game.state.boards[game.state.aggressive].deploymentPoints =
-        Math.min(10, Math.floor(game.state.turn / 2) + 1);
+        Math.min(10, Math.floor(game.state.turn / 2) + 1) + 10;
+    game.state.boards[game.state.aggressive].actionHistory = {};
     game.state.aggressive = 1 - game.state.aggressive as 0 | 1;
     game.state.turn++;
     game.emitChanges();
@@ -141,3 +144,14 @@ async function user_meta_name_set(socket: EFSocket, name: string): Promise<Socke
     await db.userMeta.updateOneOrAdd({ _id: socket.user._id }, { name });
     return res.data();
 };
+
+async function game_moves(socket: EFSocket): Promise<Socket_StandardRes> {
+    const res = new SocketRes("game.moves");
+
+    const game = games.get(socket.gameId);
+    if (!game) return res.err("Game not found");
+
+    const moves = getPossibleMoves(structuredClone(game.state), game.state.aggressive);
+    moves.sort((a, b) => b.score - a.score);
+    return res.data(moves);
+}

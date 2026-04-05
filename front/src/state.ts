@@ -1,3 +1,4 @@
+import { mgl } from "#mgl";
 import { BoardUi } from "#ui/board";
 import { GameState } from "_types/state";
 
@@ -15,3 +16,5 @@ export const boardsComp = [
     new BoardUi(boards[0]),
     new BoardUi(boards[1]),
 ];
+
+mgl.state = gameState;

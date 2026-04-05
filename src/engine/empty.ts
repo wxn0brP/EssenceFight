@@ -12,5 +12,7 @@ export function getEmptyBoard(): BoardState {
             unused: [],
             state: {},
         },
+
+        actionHistory: {},
     }
 }
