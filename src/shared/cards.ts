@@ -1,10 +1,11 @@
+import type { Data } from "@wxn0brp/db-core/types/data";
+import type { VQueryT } from "@wxn0brp/db-core/types/query";
+import { hasFieldsAdvanced } from "@wxn0brp/db-core/utils/hasFieldsAdvanced";
 import { AdapterBuilder } from "@wxn0brp/vql/helpers/apiAbstract";
 import { YAML } from "bun";
 import { existsSync } from "fs";
 import { readdir, readFile } from "fs/promises";
 import { join } from "path";
-import { hasFieldsAdvanced } from "@wxn0brp/db-core/utils/hasFieldsAdvanced";
-import { Data, FindQuery } from "@wxn0brp/vql-client/vql";
 
 const cardAdapter = new AdapterBuilder();
 export const cardDB = cardAdapter.getAdapter(true);
@@ -19,9 +20,9 @@ export async function getCardById(id: string) {
     return YAML.parse(await readFile(path, "utf-8"));
 }
 
-function findCards(search: FindQuery, one: false): Promise<any>;
-function findCards(search: FindQuery, one: true): Promise<[any]>;
-async function findCards(search: FindQuery, one = false) {
+function findCards(search: VQueryT.Find, one: false): Promise<any>;
+function findCards(search: VQueryT.Find, one: true): Promise<[any]>;
+async function findCards(search: VQueryT.Find, one = false) {
     const cardsFiles = await readdir(cardsDir);
     const cards = [];
 
