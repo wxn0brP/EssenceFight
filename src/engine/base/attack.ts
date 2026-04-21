@@ -80,6 +80,9 @@ export async function game_attack_base(
 
     engine.emit("game.attack", engine.state.aggressive, aggressiveCardPositionData, defensiveCardPositionData);
 
-    if (checkWin(engine)) return;
+    if (checkWin(engine))
+        return res.data();
+
     engine.emitChanges();
+    return res.data();
 }
