@@ -31,6 +31,7 @@ if (tokenRes.err === true) {
 }
 
 const socketUrl = await fetchApiJson("config/socket").then(res => res.url);
+qs("#not-login").remove();
 
 export const user = tokenRes.data;
 

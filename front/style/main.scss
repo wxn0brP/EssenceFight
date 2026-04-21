@@ -39,3 +39,18 @@ aside {
         }
     }
 }
+
+#not-login {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+    position: fixed;
+    top: 0;
+    left: 0;
+    gap: 8px;
+    background-color: #111;
+    z-index: 1000;
+}
