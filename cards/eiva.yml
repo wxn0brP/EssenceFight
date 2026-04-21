@@ -1,0 +1,31 @@
+_id: eiva
+name: Eiva
+type: unit
+region: Tritenity
+frameLvl: 2
+nature: "None"
+class:
+  - Sniper
+health: 3
+cost: 5
+attack:
+  physical: 6
+  arts: 0
+  true: 0
+armor:
+  physical: 0
+  arts: 0
+effects:
+  - _id: eiva_attack_choice
+    name: Attack Choice
+    trigger: attack
+    cost: 0
+    operations:
+      - op: resolve_target
+        target: enemy
+
+      - op: parse_damage
+        value: "2T"
+
+      - op: apply_damage
+    description: "Can choose between 2 attack types: long-distance shoot dealing +2T Dmg if enemy is caster or sniper; close attack dealing +2T Dmg to target if he's tank. If he dies, deal 1T Dmg to every enemy surrounding him."

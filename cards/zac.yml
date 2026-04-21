@@ -1,0 +1,128 @@
+_id: zac
+name: Zac
+type: unit
+region: Tritenity
+frameLvl: 2
+nature: "None"
+class:
+  - Evoker
+health: 7
+cost: 5
+attack:
+  physical: 2
+  arts: 0
+  true: 0
+armor:
+  physical: 0
+  arts: 1
+effects:
+  - _id: zac_summon_zapper
+    name: Summon Zapper
+    trigger: ability
+    costDP: 2
+    operations:
+      - op: check_cost
+        resource: DP
+        amount: 2
+
+      - op: find_empty_slot
+        zone: ground
+        assign: slotIndex
+
+      - op: create_card
+        cardId: zapper
+        position: ground-$slotIndex
+        assign: summonedCard
+
+      - op: pay_cost
+        resource: DP
+        amount: 2
+
+      - op: emit
+        event: card.summoned
+        data:
+          card: $summonedCard
+          parent: $sourceCardId
+    description: Self-defending turret. At the end of every round, deal 1A Dmg to EVERY enemy.
+
+  - _id: zac_summon_requiem
+    name: Summon Requiem
+    trigger: ability
+    costDP: 2
+    operations:
+      - op: check_cost
+        resource: DP
+        amount: 2
+
+      - op: check_condition
+        condition: "high ground only"
+
+      - op: find_empty_slot
+        zone: ground
+        assign: slotIndex
+
+      - op: create_card
+        cardId: requiem
+        position: ground-$slotIndex
+        assign: summonedCard
+
+      - op: pay_cost
+        resource: DP
+        amount: 2
+
+      - op: emit
+        event: card.summoned
+        data:
+          card: $summonedCard
+          parent: $sourceCardId
+    description: Self-shooting gun. (2EP) Deal my dmg as A Dmg to chosen enemy.
+
+  - _id: zac_summon_mimosa
+    name: Summon M1M0SA
+    trigger: ability
+    costDP: 2
+    operations:
+      - op: check_cost
+        resource: DP
+        amount: 2
+
+      - op: find_empty_slot
+        zone: ground
+        assign: slotIndex
+
+      - op: create_card
+        cardId: mimosa
+        assign: summonedCard
+
+      - op: pay_cost
+        resource: DP
+        amount: 2
+
+    description: Self-healing bot. At the end of the round, heal the lowest HP ally for my dmg.
+
+potencial:
+  requirements: Deploy all 3 summons (Zapper, Requiem, M1M0SA).
+  effects:
+    - _id: zac_potencial_altair
+      name: Summon Altair
+      trigger: ability
+      costDP: 2
+      operations:
+        - op: check_cost
+          resource: DP
+          amount: 2
+
+        - op: find_empty_slot
+          zone: ground
+          assign: slotIndex
+
+        - op: create_card
+          cardId: altair
+          position: ground
+
+        - op: pay_cost
+          resource: DP
+          amount: 2
+      description: Mass destruction machine. Deploy - destroy every Zac's summon and gain their stats and effects. When deployed, Zac can't summon other summons.
+
+description: All summons stay on the table if Zac is killed.

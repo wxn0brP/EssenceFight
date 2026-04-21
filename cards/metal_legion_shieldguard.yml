@@ -1,0 +1,32 @@
+_id: metal_legion_shieldguard
+name: Metal legion ShieldGuard
+type: unit
+region: Tritenity
+frameLvl: 1
+nature: Lightning
+class:
+  - Tank
+health: 9
+cost: 8
+attack:
+  physical: 0
+  arts: 0
+  true: 0
+armor:
+  physical: 4
+  arts: 3
+effects:
+  - _id: metal_legion_first_scratch
+    name: First scratch
+    trigger: defend
+    cost: 0
+    operations:
+      - op: resolve_target
+        target: enemy
+
+      - op: parse_damage
+        # value: "armor + arts resist - dmg taken"
+        value: "3A"
+
+      - op: apply_damage
+    description: When hit by enemy for the first time, deal dmg to him equal to my armor + arts resist - dmg enemy dealt to me. After that, gain +3 Armor and +4 Arts Resist.

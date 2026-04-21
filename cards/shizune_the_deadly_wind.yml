@@ -1,0 +1,61 @@
+_id: shizune_the_deadly_wind
+name: Shizune the deadly wind
+type: unit
+region: the island of the blessed tree
+frameLvl: 3
+nature: Wind
+class:
+  - Leader
+health: 24
+cost: 0
+attack:
+  physical: 2
+  arts: 0
+  true: 0
+armor:
+  physical: 1
+  arts: 1
+effects:
+  - _id: shizune_fast_as_wind
+    name: Fast as a wind
+    trigger: ability
+    cost: 3
+    operations:
+      - op: check_cost
+        resource: EP
+        amount: 3
+
+      - op: resolve_target
+        target: ally
+
+      - op: resolve_target
+        target: enemy
+
+      - op: parse_damage
+        value: "2P"
+        assign: damage
+
+      - op: apply_damage
+
+      - op: pay_cost
+        resource: EP
+        amount: 3
+    description: Choose ally unit to hit one enemy. If enemy died, recover 1EP. If enemy is still alive after hit, he counter hits.
+
+potencial:
+  requirements: You hit enemy 16 times.
+  effects:
+    - _id: shizune_potencial_buff
+      name: Wind Empowerment
+      trigger: passive
+      cost: 0
+      operations:
+        - op: resolve_target
+          target: ally
+
+        - op: apply_buff
+          targets: allies
+          value: "+2/+3"
+      description: When your team attacks, give them my passive effect. If at least one enemy died, you can once again perform attack phase this round.
+
+description: Round start - Gain fast as a wind. Everytime I fight, I hit enemy first. If he dies, I hit second target for 50% of my dmg.

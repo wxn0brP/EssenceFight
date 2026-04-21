@@ -1,0 +1,37 @@
+_id: kayrin_soldier
+name: Kayrin soldier
+type: unit
+region: Kayrin
+frameLvl: 1
+nature: Fire
+class:
+  - Fighter
+health: 2
+cost: 2
+attack:
+  physical: 3
+  arts: 0
+  true: 0
+armor:
+  physical: 0
+  arts: 0
+effects:
+  - _id: kayrin_soldier_buff
+    name: Damage Boost
+    trigger: ability
+    cost: 1
+    operations:
+      - op: check_cost
+        resource: EP
+        amount: 1
+
+      - op: resolve_target
+        target: self
+
+      - op: apply_buff
+        value: "1A"
+
+      - op: pay_cost
+        resource: EP
+        amount: 1
+    description: Increase dmg of your next attack to +1A Dmg.

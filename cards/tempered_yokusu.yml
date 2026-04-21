@@ -1,0 +1,29 @@
+_id: tempered_yokusu
+name: Tempered yokusu
+type: unit
+region: the islands of the blessed tree
+frameLvl: 1
+nature: Earth
+class:
+  - Fighter
+health: 5
+cost: 1
+attack:
+  physical: 2
+  arts: 0
+  true: 0
+armor:
+  physical: 0
+  arts: 0
+effects:
+  - _id: tempered_yokusu_deploy
+    name: Deployment Boost
+    trigger: deploy
+    cost: 0
+    operations:
+      - op: resolve_target
+        target: self
+
+      - op: apply_buff
+        value: "+1/+1"
+    description: When deployed, if your aggressor, I gain +1/+1.

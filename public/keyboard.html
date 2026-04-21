@@ -1,0 +1,48 @@
+<div id="keyboard-help" style="display: none;">
+    <h2>Keyboard Controls</h2>
+    <p class="hint">Type a command, then press <kbd>Enter</kbd> to execute. <kbd>Esc</kbd> clears buffer.</p>
+    <table>
+        <tr>
+            <td>d{num}{zone}{slot}</td>
+            <td>Deploy card from hand</td>
+        </tr>
+        <tr>
+            <td>a{fromPos}{toPos}</td>
+            <td>Attack</td>
+        </tr>
+        <tr>
+            <td>ee</td>
+            <td>End turn</td>
+        </tr>
+        <tr>
+            <td>nn</td>
+            <td>Next phase</td>
+        </tr>
+        <tr>
+            <td>e{zone}{slot}.{effectIdx}[target]</td>
+            <td>Use effect (zone: d=deck, g/c/r=board)</td>
+        </tr>
+        <tr>
+            <td>ArrowUp/Down</td>
+            <td>Navigate history</td>
+        </tr>
+        <tr>
+            <td>h</td>
+            <td>Toggle help</td>
+        </tr>
+    </table>
+    <p class="zones">
+        Zones:
+        <kbd>g</kbd> = ground,
+        <kbd>c</kbd> = castle,
+        <kbd>r</kbd> = runes,
+        <kbd>d</kbd> = deck
+    </p>
+    <p class="examples"><span>d12g1</span> -> 13th card -> ground-1</p>
+    <p class="examples"><span>ag1c0</span> -> ground-1 attacks castle-0</p>
+    <p class="examples"><span>ed1.1</span> -> deck card 1, effect 1</p>
+    <p class="examples"><span>eg0.2g1</span> -> ground-0 effect 2, target ground-1</p>
+    <p class="close-hint">Press <kbd>h</kbd> or <kbd>Esc</kbd> to close</p>
+</div>
+<div id="keyboard-feedback"></div>
+<div id="keyboard-buffer"></div>

@@ -1,0 +1,37 @@
+_id: arcids_heavyguard
+name: Arcid's HeavyGuard
+type: unit
+region: Arcid
+frameLvl: 1
+nature: "None"
+class:
+  - Tank
+health: 6
+cost: 2
+attack:
+  physical: 1
+  arts: 0
+  true: 0
+armor:
+  physical: 1
+  arts: 0
+effects:
+  - _id: arcids_heavyguard_effect_1
+    name: Armor Boost
+    trigger: ability
+    cost: 1
+    operations:
+      - op: check_cost
+        resource: EP
+        amount: 1
+
+      - op: resolve_target
+        target: self
+
+      - op: apply_buff
+        value: "+1 Armor"
+
+      - op: pay_cost
+        resource: EP
+        amount: 1
+    description: Gain +1 Armor.

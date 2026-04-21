@@ -1,0 +1,21 @@
+_id: march_on
+name: March on!
+type: spell
+region: Arcid
+frameLvl: 1
+nature: "None"
+cost: 3
+castingType: slow
+targetScope: ally
+effects:
+  - _id: march_on_buff
+    name: March On Buff
+    trigger: ability
+    cost: 0
+    operations:
+      - op: resolve_target
+        target: ally
+
+      - op: apply_buff
+        value: "+1/+1"
+    description: Give +1/+1 to armor of every unit in your front line.

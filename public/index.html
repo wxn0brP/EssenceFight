@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark light">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <title>Essence Fight</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="loader.css">
+</head>
+
+<body>
+    <div id="view-game" style="display: none;">
+        <div id="boards">
+            <!-- include board -->
+            <!-- include board -->
+        </div>
+        <div id="game-controls">
+            <div id="game-controls-buttons">
+                <button data-id="end-turn">End Turn</button>
+                <button data-id="next-phase">Next phase</button>
+                <div>
+                    Next phase: <span data-id="next-phase-count">0</span>/2
+                </div>
+            </div>
+            <div id="unused-cards">
+                <div id="unused-cards-container"></div>
+                <div id="unused-cards-overlay"></div>
+            </div>
+        </div>
+        <div id="game-notification" class="notification-overlay" style="display: none;">
+            <div class="notification-content">
+                <h1 id="notification-title">VICTORY</h1>
+                <p id="notification-message">You have defeated your opponent!</p>
+                <div id="notification-actions">
+                    <button id="notification-close">Continue</button>
+                </div>
+            </div>
+        </div>
+        <div id="turn-banner">YOUR TURN</div>
+        <div id="targeting-banner" style="display: none;">
+            <span id="targeting-text"></span>
+            <button id="targeting-cancel">Cancel</button>
+        </div>
+        <!-- include keyboard -->
+    </div>
+
+    <div id="not-login">
+        <h1>Login required</h1>
+        <p>The login page has been opened in your browser.</p>
+        <p>If you don’t see it, check other windows or your taskbar - it may be in the background.</p>
+    </div>
+
+    <div id="match-proposal" class="notification-overlay" style="display: none;">
+        <div class="notification-content">
+            <h1>Match Found</h1>
+            <p>Wait, this match seems unfair (MMR difference > 40).</p>
+            <p>Do you want to proceed?</p>
+            <div class="match-actions" style="display: flex; gap: 1rem; justify-content: center;">
+                <button id="match-accept" style="background: var(--accent);">Accept</button>
+                <button id="match-decline" style="background: #e74c3c;">Decline</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="loader" style="display: none;">
+        <div class="loader"></div>
+    </div>
+
+    <div id="view-main">
+        <!-- include page/profile -->
+        <!-- include page/main -->
+        <!-- include page/play -->
+        <!-- include page/cards -->
+        <!-- include page/card-summon -->
+        <!-- include page/shop -->
+        <!-- include page/aside -->
+    </div>
+
+    <script type="module" src="init.js"></script>
+</body>
+
+</html>
